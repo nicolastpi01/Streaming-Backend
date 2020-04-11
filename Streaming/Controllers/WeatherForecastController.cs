@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,12 @@ namespace Streaming.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+        
+        [Route("video")]
+        public FileResult getFileById(int fileId)
+        {
+            return PhysicalFile(Path.GetFullPath(@"KONO DIO DA.mp4"), "application/octet-stream", enableRangeProcessing: true);
         }
     }
 }
