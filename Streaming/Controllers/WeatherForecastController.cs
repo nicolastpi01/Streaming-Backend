@@ -42,5 +42,23 @@ namespace Streaming.Controllers
         {
             return PhysicalFile(Path.GetFullPath(@"KONO DIO DA.mp4"), "application/octet-stream", enableRangeProcessing: true);
         }
+
+        /*
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult GetVideo(int id)
+        {
+            var fileName = GetVideoFileName(id);
+            var video = new VideoStream(fileName);
+            var response = new HttpResponseMessage
+            {
+                Content = new PushStreamContent(video.WriteToStream, new MediaTypeHeaderValue("video/mp4"))
+            };
+            var objectResult = new ObjectResult(response);
+            objectResult.ContentTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue("video/mp4"));
+            return objectResult;
+        }
+        */
+
     }
 }
