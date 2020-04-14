@@ -9,6 +9,7 @@ using Streaming.Services;
 
 namespace Streaming.Controllers
 {
+    /*
     [Route("api/[controller]")]
     [ApiController]
     public class StreamingController : ControllerBase
@@ -34,7 +35,7 @@ namespace Streaming.Controllers
         {
             return _streamingService.GetVideoByName(video);
         }
-            /*
+            
             [HttpGet]
             [Route("[action]")]
             public IActionResult GetVideo(int id)
@@ -48,7 +49,7 @@ namespace Streaming.Controllers
                 var objectResult = new ObjectResult(response);
                 objectResult.ContentTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue("video/mp4"));
                 return objectResult;
-            }*/
+            }
 
-        }
+        } */
 }
