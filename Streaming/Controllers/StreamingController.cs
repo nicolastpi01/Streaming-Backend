@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -19,11 +20,14 @@ namespace Streaming.Controllers
             _streamingService = streamingService;
         }
 
-        [HttpGet("{name}")]
-        public async Task<FileStreamResult> Get(string name)
+        [HttpGet]
+        public FileResult Get()
         {
-            var stream = await _streamingService.GetVideoByName(name);
-            return new FileStreamResult(stream, "video/mp4");
+            //var stream = await _streamingService.GetVideoByName(name);
+            //return new FileStreamResult(stream, "video/mp4");
+            return PhysicalFile(Path.GetFullPath(@"small.mp4"), "application/octet-stream", enableRangeProcessing: true);
         }
+
+        
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace Streaming.Services
             _client = new HttpClient();
         }
 
+        //public async Task<Stream> GetVideoByName(string name)
         public async Task<Stream> GetVideoByName(string name)
         {
             var urlBlob = string.Empty;
@@ -33,6 +35,7 @@ namespace Streaming.Services
                     break;
             }
             return await _client.GetStreamAsync(urlBlob);
+            //return PhysicalFile(Path.GetFullPath(@"KONO DIO DA.mp4"), "application/octet-stream", enableRangeProcessing: true);
         }
 
         ~AzureVideoStreamService()

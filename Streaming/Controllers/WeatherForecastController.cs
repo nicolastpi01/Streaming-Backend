@@ -37,11 +37,13 @@ namespace Streaming.Controllers
             .ToArray();
         }
         
+        /*
         [Route("video")]
         public FileResult getFileById(int fileId)
         {
-            return PhysicalFile(Path.GetFullPath(@"KONO DIO DA.mp4"), "application/octet-stream", enableRangeProcessing: true);
+            return PhysicalFile(Path.GetFullPath(@"small.mp4"), "application/octet-stream", enableRangeProcessing: true);
         }
+        */
 
         /*
         [HttpGet]
