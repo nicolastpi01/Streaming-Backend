@@ -6,6 +6,8 @@ using System.Threading;
 using System.Net.Http;
 using System.IO;
 using System.Net;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace Streaming.Controllers
 {
@@ -15,6 +17,23 @@ namespace Streaming.Controllers
     {
 
         private const string videoFilePath = "~/Movies/";
+        private System.Collections.ArrayList listaVideos;
+
+        public VideoController(IConfiguration Configuration)
+        {
+            listaVideos = new System.Collections.ArrayList();
+            listaVideos.Add(Configuration["video1"]);
+            listaVideos.Add(Configuration["video2"]);
+            listaVideos.Add(Configuration["video3"]);
+        }
+
+        [Route("getFileById")]
+        public FileResult getFileById(int fileId)
+        {
+            fileId = fileId < 0 ? 0 : fileId;
+            fileId = fileId > 2 ? 2 : fileId;
+            return PhysicalFile(Path.GetFullPath(@listaVideos[fileId] as string), "application/octet-stream", enableRangeProcessing: true);
+        }
 
         /// Gets the live video.
         [HttpGet]
