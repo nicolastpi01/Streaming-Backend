@@ -23,7 +23,7 @@ namespace Streaming.Controllers
         public FileResult getFileById(int fileId)
         {
             fileId = fileId < 0 ? 0 : fileId;
-            fileId = fileId > 2 ? 2 : fileId;
+            fileId = fileId > 3 ? 3 : fileId;
      
             string path = Path.GetFullPath(@listaVideos[fileId] as string);
             var fileStream = System.IO.File.Open(path, FileMode.Open);
