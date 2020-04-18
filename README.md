@@ -1,7 +1,14 @@
-Streaming
 
-Es una aplicacion de videos con fines educativos de acceso libre.
+<h1 style='text-align: justify;'> Streaming </h1>
 
-![Screenshot](icon.png) 
+<p style='text-align: justify;'> Es una aplicación de videos con fines educativos de acceso libre </p>
 
-Links:
+
+![Screenshot](icon.png =100x20) 
+
+
+In a hole in the ground there lived a hobbit. Not a nasty, dirty, wet hole, filled with the ends
+of worms and an oozy smell, nor yet a dry, bare, sandy hole with nothing in it to sit down on or to
+eat: it was a [hobbit-hole](https://en.wikipedia.org/wiki/Hobbit#Lifestyle "Hobbit lifestyles"), and that means comfort.
+
+
