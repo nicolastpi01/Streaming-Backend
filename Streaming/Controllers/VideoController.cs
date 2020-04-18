@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Streaming.Domain;
 using Microsoft.AspNetCore.Http;
 using NuGet.Protocol;
+using System.Linq;
 
 namespace Streaming.Controllers
 {
@@ -40,14 +41,9 @@ namespace Streaming.Controllers
          [Route("videos")]
          public string GetVideos()
          {
-            System.Collections.ArrayList videos = new System.Collections.ArrayList();
-            int index = 0;
-            foreach (var video in repo.listaVideos)
-            {
-                videos.Add( new VideosResult(index++,(video as Media).Nombre) );
-            }
-
-            return videos.ToJson();
+            return repo.listaVideos
+                .Select(pair => new VideosResult(pair.Key, pair.Value.Nombre))  //esto es el map, viene por extension de LINQ
+                .ToJson();
          }
         /*
         [HttpGet]
