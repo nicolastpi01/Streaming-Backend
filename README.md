@@ -4,7 +4,7 @@
 <p style='text-align: justify;'> Es una aplicación de videos con fines educativos de acceso libre </p>
 
 
-![icon](icon.png width="200") 
+![ScreenShot](icon.png ) 
 
 
 In a hole in the ground there lived a hobbit. Not a nasty, dirty, wet hole, filled with the ends
