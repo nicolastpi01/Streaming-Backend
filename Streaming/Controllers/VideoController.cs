@@ -22,6 +22,7 @@ namespace Streaming.Controllers
             repo.Add("video3", Configuration["video3"]);
         }
 
+        [HttpGet]
         [Route("getFileById")]
         public FileResult getFileById(int fileId)
         {

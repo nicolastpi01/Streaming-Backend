@@ -30,9 +30,10 @@ namespace Streaming
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
                 {
-                    builder.AllowAnyMethod().AllowAnyHeader();
-                           //.WithOrigins("http://localhost:3000")
-                           //.AllowCredentials();
+                    builder.AllowAnyMethod().AllowAnyHeader()
+                           .AllowAnyOrigin(); //.WithOrigins("http://localhost:3000").
+
+                    //.AllowCredentials();
                 }));
 
             //services.AddSignalRCore();
@@ -53,10 +54,16 @@ namespace Streaming
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseCors( builder =>
+            {
+                builder.AllowAnyMethod().AllowAnyHeader()
+                       .AllowAnyOrigin(); //.WithOrigins("http://localhost:3000").
 
-            app.UseCors();
+                //.AllowCredentials();
+            });
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
