@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Streaming.Domain;
 
 namespace Streaming
 {
@@ -41,6 +42,7 @@ namespace Streaming
             services.AddMvc();
             //services.AddScoped<IAzureVideoStreamService, AzureVideoStreamService>();
             //services.AddSignalR();
+            InsertData();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,6 +87,22 @@ namespace Streaming
                 };
                 timer.Start();
             }); */
+        }
+
+        private static void InsertData()
+        {
+            using (var context = new MediaContext())
+            {
+                // Creates the database if not exists
+                context.Database.EnsureCreated();
+
+                // Adds some books
+                context.Media.Add(new Media("A","1"));
+                context.Media.Add(new Media("B","1"));
+
+                // Saves changes
+                context.SaveChanges();
+            }
         }
     }
 }
