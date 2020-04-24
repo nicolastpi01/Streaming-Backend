@@ -13,6 +13,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Streaming.Domain;
 
+using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+
 namespace Streaming
 {
     public class Startup
@@ -37,15 +40,20 @@ namespace Streaming
                     //.AllowCredentials();
                 }));
 
+            services.AddDbContextPool<MediaContext>(options => options
+                // replace with your connection string
+                .UseMySql($"server=localhost;user id={Configuration["SQLUSER"]};Pwd={Configuration["SQLPASS"]};persistsecurityinfo=True;database=tip_streaming;", mySqlOptions => mySqlOptions
+                    // replace with your Server Version and Type
+                    .ServerVersion(new Version(8, 0, 18), ServerType.MySql)
+            ));
+
             //services.AddSignalRCore();
             services.AddControllers();
             services.AddMvc();
-            //services.AddScoped<IAzureVideoStreamService, AzureVideoStreamService>();
+            services.AddScoped<DbContext, MediaContext>();
             //services.AddSignalR();
-            InsertData();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime hostApplicationLifetime)
         {
             if (env.IsDevelopment())
@@ -60,7 +68,7 @@ namespace Streaming
             app.UseCors( builder =>
             {
                 builder.AllowAnyMethod().AllowAnyHeader()
-                       .AllowAnyOrigin(); //.WithOrigins("http://localhost:3000").
+                       .AllowAnyOrigin();
 
                 //.AllowCredentials();
             });
@@ -72,37 +80,6 @@ namespace Streaming
                 //endpoints.MapHub<AsyncEnumerableHub>("/AsyncEnumerableHub");
                 endpoints.MapControllers();
             });
-
-            /*
-            hostApplicationLifetime.ApplicationStarted.Register(() =>
-            {
-
-                var serviceProvider = app.ApplicationServices;
-                var Hub = (IHubContext<AsyncEnumerableHub>)serviceProvider.GetService(typeof(IHubContext<AsyncEnumerableHub>));
-
-                var timer = new System.Timers.Timer(1000);
-                timer.Enabled = true;
-                timer.Elapsed += delegate (object sender, System.Timers.ElapsedEventArgs e) {
-                    Hub.Clients.All.SendAsync("setTime", DateTime.Now.ToString("dddd d MMMM yyyy HH:mm:ss"));
-                };
-                timer.Start();
-            }); */
-        }
-
-        private static void InsertData()
-        {
-            using (var context = new MediaContext())
-            {
-                // Creates the database if not exists
-                context.Database.EnsureCreated();
-
-                // Adds some books
-                context.Media.Add(new Media("A","1"));
-                context.Media.Add(new Media("B","1"));
-
-                // Saves changes
-                context.SaveChanges();
-            }
         }
     }
 }

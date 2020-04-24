@@ -10,9 +10,17 @@ namespace Streaming.Domain
     {
         public DbSet<Media> Media { get; set; }
 
+        public MediaContext(DbContextOptions<MediaContext> dbContextOptions) : base(dbContextOptions)
+        {
+            if (Media.Count() == 0)
+            {
+
+            }
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL("server=localhost;database=databaseStreaming;user=user;password=password");
+//            optionsBuilder.UseMySql("server=localhost;user id=root;persistsecurityinfo=True;database=tip_streaming;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

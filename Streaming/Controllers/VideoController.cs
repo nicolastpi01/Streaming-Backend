@@ -6,6 +6,7 @@ using Streaming.Domain;
 using Microsoft.AspNetCore.Http;
 using NuGet.Protocol;
 using System.Linq;
+using System;
 
 namespace Streaming.Controllers
 {
@@ -14,13 +15,16 @@ namespace Streaming.Controllers
     public class VideoController : ControllerBase
     {
         private MediaRepo repo;
+        private MediaContext Context;
 
-        public VideoController(IConfiguration Configuration)
+        public VideoController(IConfiguration Configuration, MediaContext contexto)
         {
             repo = new MediaRepo();
+            Context = contexto;
+            /*
             repo.Add("video1", Configuration["video1"]);
             repo.Add("video2", Configuration["video2"]);
-            repo.Add("video3", Configuration["video3"]);
+            repo.Add("video3", Configuration["video3"]);*/
         }
 
         [HttpGet]
@@ -41,10 +45,15 @@ namespace Streaming.Controllers
          [Route("videos")]
          public string GetVideos()
          {
+            return Context.Media
+                .Select(pair => new VideosResult( pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
+                .ToJson();
+            /*
             return repo.listaVideos
                 .Select(pair => new VideosResult(pair.Key, pair.Value.Nombre))  //esto es el map, viene por extension de LINQ
-                .ToJson();
-         }
+                .ToJson();*/
+        }
+
         /*
         [HttpGet]
         [Route("videos")]
@@ -63,10 +72,10 @@ namespace Streaming.Controllers
 
     class VideosResult
     {
-        public int indice;
+        public string indice;
         public string nombre;
 
-        public VideosResult(int indice, string nombre)
+        public VideosResult(string indice, string nombre)
         {
             this.indice = indice;
             this.nombre = nombre;
