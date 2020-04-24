@@ -1,21 +1,21 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Streaming.Infraestructura;
+using Streaming.Infraestructura.Repositories;
+using Streaming.Infraestructura.Repositories.contracts;
 
 namespace Streaming
 {
     public class Startup
     {
+
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,6 +27,18 @@ namespace Streaming
         public void ConfigureServices(IServiceCollection services)
         {
             
+            // other service configurations go here
+            // replace "YourDbContext" with the class name of your DbContext
+            services.AddDbContextPool<MediaContext>(options => options
+                // replace with your connection string
+                .UseMySql("server=localhost;user id=root; password=dinocrisis;persistsecurityinfo=True;database=mysql", mySqlOptions => mySqlOptions
+                    // replace with your Server Version and Type
+                    .ServerVersion(new Version(8, 0, 19), ServerType.MySql)
+             ));
+
+            
+
+
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
                 {
@@ -36,15 +48,15 @@ namespace Streaming
                     //.AllowCredentials();
                 }));
 
-            //services.AddSignalRCore();
+
+            services.AddTransient<IMediaRepository, MediaRepository>();
+            services.AddScoped<DbContext, MediaContext>();
             services.AddControllers();
             services.AddMvc();
-            //services.AddScoped<IAzureVideoStreamService, AzureVideoStreamService>();
-            //services.AddSignalR();
-        }
+         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime hostApplicationLifetime)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -67,24 +79,12 @@ namespace Streaming
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapHub<AsyncEnumerableHub>("/AsyncEnumerableHub");
+                
                 endpoints.MapControllers();
             });
 
-            /*
-            hostApplicationLifetime.ApplicationStarted.Register(() =>
-            {
-
-                var serviceProvider = app.ApplicationServices;
-                var Hub = (IHubContext<AsyncEnumerableHub>)serviceProvider.GetService(typeof(IHubContext<AsyncEnumerableHub>));
-
-                var timer = new System.Timers.Timer(1000);
-                timer.Enabled = true;
-                timer.Elapsed += delegate (object sender, System.Timers.ElapsedEventArgs e) {
-                    Hub.Clients.All.SendAsync("setTime", DateTime.Now.ToString("dddd d MMMM yyyy HH:mm:ss"));
-                };
-                timer.Start();
-            }); */
         }
     }
+
+
 }
