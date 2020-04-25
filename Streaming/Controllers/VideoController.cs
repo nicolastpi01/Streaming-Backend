@@ -19,25 +19,31 @@ namespace Streaming.Controllers
 
         public VideoController(IConfiguration Configuration, MediaContext contexto)
         {
-            repo = new MediaRepo();
+            contexto.ApplyConfiguration(Configuration);
             Context = contexto;
-            /*
-            repo.Add("video1", Configuration["video1"]);
-            repo.Add("video2", Configuration["video2"]);
-            repo.Add("video3", Configuration["video3"]);*/
+
         }
 
         [HttpGet]
         [Route("getFileById")]
-        public FileResult getFileById(int fileId)
+        public ActionResult getFileById(string fileId)
         {
-            fileId = fileId < 0 ? 0 : fileId;
-            fileId = fileId > 3 ? 3 : fileId;
-     
-            string path = Path.GetFullPath(repo.ruta(fileId));
-            var fileStream = System.IO.File.Open(path, FileMode.Open);
-            
-            return File(fileStream, "application/octet-stream");
+            try
+            {
+                var ruta = Context.Media
+                    .Where(media => media.Id.ToString().Equals(fileId))
+                    .Select(media => media.Ruta)
+                    .Single();
+
+                string path = Path.GetFullPath(ruta);
+                var fileStream = System.IO.File.Open(path, FileMode.Open);
+
+                return File(fileStream, "application/octet-stream");
+            }
+            catch(InvalidOperationException e)
+            {
+                return new EmptyResult();
+            }
         }
 
         

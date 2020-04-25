@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,23 @@ namespace Streaming.Domain
 
         public MediaContext(DbContextOptions<MediaContext> dbContextOptions) : base(dbContextOptions)
         {
+
+        }
+
+        public void ApplyConfiguration(IConfiguration Configuration)
+        {
             if (Media.Count() == 0)
             {
-
+                Media.AddAsync(new Media("video1", Configuration["video1"]));
+                Media.AddAsync(new Media("video2", Configuration["video2"]));
+                Media.AddAsync(new Media("video3", Configuration["video3"]));
             }
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-//            optionsBuilder.UseMySql("server=localhost;user id=root;persistsecurityinfo=True;database=tip_streaming;");
+            //optionsBuilder.
+            //            optionsBuilder.UseMySql("server=localhost;user id=root;persistsecurityinfo=True;database=tip_streaming;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

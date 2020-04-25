@@ -15,6 +15,7 @@ using Streaming.Domain;
 
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Streaming
 {
