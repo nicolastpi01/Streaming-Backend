@@ -26,15 +26,17 @@ namespace Streaming
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             // other service configurations go here
             // replace "YourDbContext" with the class name of your DbContext
-            services.AddDbContextPool<MediaContext>(options => options
+
+            services.AddDbContext<MediaContext>(options => options
                 // replace with your connection string
-                .UseMySql("server=localhost;user id=root; password=dinocrisis;persistsecurityinfo=True;database=mysql", mySqlOptions => mySqlOptions
+                .UseMySql("server=localhost;user id=root;persistsecurityinfo=True;database=mysql", mySqlOptions => mySqlOptions
                     // replace with your Server Version and Type
                     .ServerVersion(new Version(8, 0, 19), ServerType.MySql)
-             ));
+                    .DisableBackslashEscaping()
+             ));  
 
             
 
@@ -48,9 +50,9 @@ namespace Streaming
                     //.AllowCredentials();
                 }));
 
-
-            services.AddTransient<IMediaRepository, MediaRepository>();
+            
             services.AddScoped<DbContext, MediaContext>();
+            services.AddTransient<IMediaRepository, MediaRepository>();
             services.AddControllers();
             services.AddMvc();
          }
