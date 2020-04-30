@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 using NuGet.Protocol;
 using System.Linq;
 using System;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Streaming.Controllers
 {
@@ -54,26 +57,19 @@ namespace Streaming.Controllers
             return Context.Media
                 .Select(pair => new VideosResult( pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
                 .ToJson();
-            /*
-            return repo.listaVideos
-                .Select(pair => new VideosResult(pair.Key, pair.Value.Nombre))  //esto es el map, viene por extension de LINQ
-                .ToJson();*/
+            
         }
 
-        /*
         [HttpGet]
-        [Route("videos")]
-        public IEnumerable<WeatherForecast> Get()
+        [Route("sugerencias")]
+        public Task<List<string>> GetSugerencias(string sugerencia)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }*/
+            return Context.Media
+                .Select(pair => pair.Nombre) //esto es el map, viene por extension de LINQ
+                .Where(pair => pair.Contains(sugerencia)) // el condicional es mas grande
+                .ToListAsync();
+        }
+
     }
 
     class VideosResult
@@ -89,3 +85,4 @@ namespace Streaming.Controllers
     }
 
 }
+ 
