@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Streaming.Domain;
-using Microsoft.AspNetCore.Http;
-using NuGet.Protocol;
 using System.Linq;
 using System;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +14,7 @@ namespace Streaming.Controllers
     [ApiController]
     public class VideoController : ControllerBase
     {
-        private MediaRepo repo;
+        //private MediaRepo repo;
         private MediaContext Context;
 
         public VideoController(IConfiguration Configuration, MediaContext contexto)
@@ -49,30 +46,63 @@ namespace Streaming.Controllers
             }
         }
 
-        
+
+        /*
          [HttpGet]
          [Route("videos")]
          public string GetVideos()
          {
             return Context.Media
                 .Select(pair => new VideosResult( pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
-                .ToJson();
-            
+                .ToJson();  
+        } */
+
+        [HttpGet]
+        [Route("videos")]
+        public Task<List<VideosResult>> GetVideos()
+        {
+            return Context.Media
+                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
+                .ToListAsync();
         }
 
         [HttpGet]
         [Route("sugerencias")]
-        public Task<List<string>> GetSugerencias(string sugerencia)
+        public Task<List<string>> GetSugerencias(string sugerencia) // las sugerencias para una posible busqueda
         {
             return Context.Media
-                .Select(pair => pair.Nombre) //esto es el map, viene por extension de LINQ
-                .Where(pair => pair.Contains(sugerencia)) // el condicional es mas grande
+                .Select(pair => pair.Nombre) //esto es el map, viene por extension de LINQ; solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
+                .Where(pair => pair.Contains(sugerencia)).Take(10) // el condicional es mas grande, toma las primeras 10 sugerencias
                 .ToListAsync();
         }
 
+        /*
+         * La busqueda de videos a partir de una busqueda string
+        [HttpGet]
+        [Route("videosByBsq")]
+        public ActionResult getVideosByBsq(string busqueda)
+        {
+            try
+            {
+                var rutas = Context.Media
+                    .Where(media => media.Nombre.Contains(busqueda))
+                    .Select(media => media.Ruta).Take(10);
+
+                rutas.
+                string path = Path.GetFullPath(ruta);
+                var fileStream = System.IO.File.Open(path, FileMode.Open);
+
+                return File(fileStream, "application/octet-stream");
+            }
+            catch (InvalidOperationException e)
+            {
+                return new EmptyResult();
+            }
+        } */
+
     }
 
-    class VideosResult
+    public class VideosResult
     {
         public string indice;
         public string nombre;
