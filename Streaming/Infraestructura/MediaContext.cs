@@ -7,7 +7,6 @@ namespace Streaming.Infraestructura
     public class MediaContext : DbContext
     {
         public const string DEFAULT_SCHEMA = "Media";
-
         public DbSet<MediaEntity> Medias { get; set; }
         public MediaContext(DbContextOptions<MediaContext> options) : base(options) { }
 
@@ -22,6 +21,5 @@ namespace Streaming.Infraestructura
                 entity.Property(_ => _.Ruta).IsRequired();
             });
         }
-
     }
 }

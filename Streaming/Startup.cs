@@ -16,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.EntityFrameworkCore.Internal;
 using Streaming.Infraestructura;
+using Streaming.Infraestructura.Repositories.contracts;
+using Streaming.Infraestructura.Repositories;
 
 namespace Streaming
 {
@@ -31,7 +33,6 @@ namespace Streaming
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
                 {
@@ -42,17 +43,18 @@ namespace Streaming
                 }));
 
             services.AddDbContextPool<MediaContext>(options => options
-                // replace with your connection string
+                
                 .UseMySql($"server=localhost;user id={Configuration["SQLUSER"]};Pwd={Configuration["SQLPASS"]};persistsecurityinfo=True;database=TIP_STREAMING;", mySqlOptions => mySqlOptions
-                    // replace with your Server Version and Type
                     .ServerVersion(new Version(8, 0, 18), ServerType.MySql)
+                    //.DisableBackslashEscaping()
             ));
+            
+            services.AddScoped<DbContext, MediaContext>();
+            services.AddTransient<IMediaRepository, MediaRepository>();
 
-            //services.AddSignalRCore();
             services.AddControllers();
             services.AddMvc();
             services.AddScoped<DbContext, MediaContext>();
-            //services.AddSignalR();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime hostApplicationLifetime)

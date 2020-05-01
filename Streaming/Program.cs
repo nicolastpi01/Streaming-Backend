@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using DotNetEnv;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-
+using Streaming.Infraestructura;
 
 namespace Streaming
 {
@@ -15,17 +16,32 @@ namespace Streaming
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = InitWebHost(args).Build();
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                //var context = services.ServiceProvider.GetService<MediaContext>();
+                var context = services.GetService<MediaContext>();
+                //DataSeeder.SeedCountries(context);
+                new MediaContextSeed().SeedAsync(context)
+                .Wait();
+            }
+            host.Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args){
+        public static IHostBuilder InitWebHost(string[] args){
             Env.Load();
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>{
                     webBuilder.UseStartup<Startup>();
                  });
         }
+
+
+
     }
 }
+
 
 
