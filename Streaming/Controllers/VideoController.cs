@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using Streaming.Domain;
 using System.Linq;
 using System;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Streaming.Infraestructura;
+using NuGet.Protocol;
 
 namespace Streaming.Controllers
 {
@@ -17,11 +18,9 @@ namespace Streaming.Controllers
         //private MediaRepo repo;
         private MediaContext Context;
 
-        public VideoController(IConfiguration Configuration, MediaContext contexto)
+        public VideoController(MediaContext contexto)
         {
-            contexto.ApplyConfiguration(Configuration);
             Context = contexto;
-
         }
 
         [HttpGet]
@@ -30,7 +29,7 @@ namespace Streaming.Controllers
         {
             try
             {
-                var ruta = Context.Media
+                var ruta = Context.Medias
                     .Where(media => media.Id.ToString().Equals(fileId))
                     .Select(media => media.Ruta)
                     .Single();
@@ -40,7 +39,7 @@ namespace Streaming.Controllers
 
                 return File(fileStream, "application/octet-stream");
             }
-            catch(InvalidOperationException e)
+            catch(InvalidOperationException)
             {
                 return new EmptyResult();
             }
@@ -59,21 +58,31 @@ namespace Streaming.Controllers
 
         [HttpGet]
         [Route("videos")]
-        public Task<List<VideosResult>> GetVideos()
+        public string GetVideos()
         {
-            return Context.Media
-                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
-                .ToListAsync();
+            return Context.Medias
+                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))
+                .ToJson();
         }
 
         [HttpGet]
         [Route("sugerencias")]
         public Task<List<string>> GetSugerencias(string sugerencia) // las sugerencias para una posible busqueda
         {
-            return Context.Media
+            return Context.Medias
                 .Select(pair => pair.Nombre) //esto es el map, viene por extension de LINQ; solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
                 .Where(pair => pair.Contains(sugerencia)).Take(10) // el condicional es mas grande, toma las primeras 10 sugerencias
                 .ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("cargar")]
+        public IActionResult GuargarVideo()
+        {
+            Context.Medias
+                .Add(new Infraestructura.Entities.MediaEntity{ Nombre = "a", Ruta = "b" });
+            Context.SaveChanges();
+            return Ok();
         }
 
         /*

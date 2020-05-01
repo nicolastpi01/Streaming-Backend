@@ -16,7 +16,7 @@ namespace Streaming.Infraestructura.Repositories
 
         public override async Task<List<MediaEntity>> GetAll()
         {
-            return await ((MediaContext)_context).medias.Select(x => x).ToListAsync();
+            return await ((MediaContext)_context).Medias.Select(x => x).ToListAsync();
         }
     }    
 }
