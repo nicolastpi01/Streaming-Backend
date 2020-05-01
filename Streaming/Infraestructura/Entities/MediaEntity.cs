@@ -7,10 +7,8 @@ namespace Streaming.Infraestructura.Entities
 {
     public class MediaEntity : Entity
     {
-        public string monedaOrigen { get; set; }
-        public string monedaDestino { get; set; }
-        public float porcentaje { get; set; }
-
+        public string Nombre { get; set; }
+        public string Ruta { get; set; }
     }
 }
 
