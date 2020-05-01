@@ -33,8 +33,8 @@ namespace Streaming.Infraestructura
         {
             //optionsBuilder.UseMySql("server=localhost;database=databaseStreaming;user=user;password=password");
             
-            optionsBuilder.UseMySql("server=localhost;user id=root;persistsecurityinfo=True;database=mysql");
-            base.OnConfiguring(optionsBuilder);
+            //optionsBuilder.UseMySql("server=localhost;user id=root;persistsecurityinfo=True;database=mysql");
+            //base.OnConfiguring(optionsBuilder);
         } 
 
 

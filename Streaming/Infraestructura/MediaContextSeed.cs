@@ -20,7 +20,7 @@ namespace Streaming.Infraestructura
                 //ESTE SEED LO QUE HACE ES QUE SI NO HAY DATOS DE CONFIGURACION , QUE SE IMPORTANTAN DESDE ARCHIVOS CSV, SE REALIZA
                 //LA MIGRACIÓN AUTOMATICAMENTE
 
-                context.Database.Migrate();
+                //context.Database.Migrate();
                 
                 if (!context.Media.Any())
                 {
@@ -28,6 +28,7 @@ namespace Streaming.Infraestructura
                     var media = new MediaEntity();
                     media.monedaOrigen = "USD";
                     media.monedaDestino = "USD";
+                
                     media.porcentaje = 10;
                     context.Media.Add(media);
                 }

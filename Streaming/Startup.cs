@@ -32,7 +32,7 @@ namespace Streaming
 
             services.AddDbContext<MediaContext>(options => options
                 // replace with your connection string
-                .UseMySql("server=localhost;user id=root;persistsecurityinfo=True;database=mysql", mySqlOptions => mySqlOptions
+                .UseMySql("server=localhost;user id=root; password=dinocrisis;persistsecurityinfo=True;database=mysql", mySqlOptions => mySqlOptions
                     // replace with your Server Version and Type
                     .ServerVersion(new Version(8, 0, 19), ServerType.MySql)
                     .DisableBackslashEscaping()
