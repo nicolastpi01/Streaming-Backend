@@ -44,7 +44,7 @@ namespace Streaming
 
             services.AddDbContextPool<MediaContext>(options => options
                 
-                .UseMySql($"server=localhost;user id={Configuration["SQLUSER"]};Pwd={Configuration["SQLPASS"]};persistsecurityinfo=True;database=TIP_STREAMING;", mySqlOptions => mySqlOptions
+                .UseMySql($"server=localhost;user id={Configuration["SQLUSER"]};Pwd={Configuration["SQLPASS"]};persistsecurityinfo=True;database={Configuration["DATABASENAME"]};", mySqlOptions => mySqlOptions
                     .ServerVersion(new Version(8, 0, 18), ServerType.MySql)
                     //.DisableBackslashEscaping()
             ));
