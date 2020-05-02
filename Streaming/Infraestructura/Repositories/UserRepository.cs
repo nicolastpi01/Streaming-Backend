@@ -15,27 +15,20 @@ namespace Streaming.Infraestructura.Repositories
         {
         }
     }
-
+    /*
     public class UserContext : DbContext
-    {
-        public const string DEFAULT_SCHEMA = "User";
-        public DbSet<UserEntity> Users { get; set; }
+    {        
         public UserContext(DbContextOptions<UserContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<UserEntity>(entity =>
-            {
-                entity.HasKey(_ => _.Id);
-                entity.Property(_ => _.Alias).IsRequired();
-                entity.Property(_ => _.Mail).IsRequired();
-            });
+
         }
 
         public static async Task Init(IServiceProvider serviceProvider,List<string> userList)
-        {/*
+        {
                 var userManager = serviceProvider.GetService<UserManager<IdentityUser>>();
 
                 foreach (var userName in userList)
@@ -44,7 +37,7 @@ namespace Streaming.Infraestructura.Repositories
                     var userId = await EnsureUser(userManager, userName, userPassword);
 
                     NotifyUser(userName, userPassword);
-                }*/
+                }
         }
 
         private static async Task<string> EnsureUser(UserManager<IdentityUser> userManager, string userName, string userPassword)
@@ -63,5 +56,5 @@ namespace Streaming.Infraestructura.Repositories
                 return user.Id;
             }
 
-        }
+        }*/
 }

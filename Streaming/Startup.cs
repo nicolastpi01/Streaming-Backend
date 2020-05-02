@@ -51,13 +51,13 @@ namespace Streaming
                     .ServerVersion(new Version(8, 0, 18), ServerType.MySql)
                     //.DisableBackslashEscaping()
             ));
-            
+
+            //services.AddDbContext<MediaContext>();
             services.AddScoped<DbContext, MediaContext>();
             services.AddTransient<IMediaRepository, MediaRepository>();
             //ConfigureAuth(services);
             services.AddControllers();
             services.AddMvc();
-            services.AddScoped<DbContext, MediaContext>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime hostApplicationLifetime)
