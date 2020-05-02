@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 
 namespace Streaming.Infraestructura.Repositories
 {
-    public class UserRepository : BaseRepository<UserEntity>, IUserRepository
+    public class UserRepository // : BaseRepository<UserEntity>, IUserRepository
     {
         // UserManager?
-        public UserRepository(DbContext context) : base(context)
-        {
-        }
+
     }
     /*
     public class UserContext : DbContext

@@ -13,8 +13,9 @@ namespace Streaming.Controllers
 
         [HttpGet]
         [Route("register")]
-        public ActionResult RegisterUser()
+        public ActionResult RegisterUser(string nombre)//[FromBody] 
         {
+            //persistir
             return Ok();
         }
     }
