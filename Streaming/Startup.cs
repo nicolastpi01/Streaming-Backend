@@ -18,6 +18,10 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Streaming.Infraestructura;
 using Streaming.Infraestructura.Repositories.contracts;
 using Streaming.Infraestructura.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Streaming
 {
@@ -38,8 +42,7 @@ namespace Streaming
                 {
                     builder.AllowAnyMethod().AllowAnyHeader()
                            .AllowAnyOrigin(); //.WithOrigins("http://localhost:3000").
-
-                    //.AllowCredentials();
+                           //.AllowCredentials();
                 }));
 
             services.AddDbContextPool<MediaContext>(options => options
@@ -51,7 +54,7 @@ namespace Streaming
             
             services.AddScoped<DbContext, MediaContext>();
             services.AddTransient<IMediaRepository, MediaRepository>();
-
+            //ConfigureAuth(services);
             services.AddControllers();
             services.AddMvc();
             services.AddScoped<DbContext, MediaContext>();
@@ -72,17 +75,87 @@ namespace Streaming
             {
                 builder.AllowAnyMethod().AllowAnyHeader()
                        .AllowAnyOrigin();
-
-                //.AllowCredentials();
+                       //.AllowCredentials();
             });
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 //endpoints.MapHub<AsyncEnumerableHub>("/AsyncEnumerableHub");
                 endpoints.MapControllers();
             });
+        }
+
+        public void ConfigureAuth(IServiceCollection services)
+        {
+            // Add authentication services
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddOpenIdConnect("Auth0", options => {
+                // Configure the scope
+                options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    options.Scope.Add("email");
+
+                // Set the correct name claim type
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "name",
+                    RoleClaimType = "https://schemas.quickstarts.com/roles"
+                };
+                /*
+                options.Events = new OpenIdConnectEvents
+                {
+                    // handle the logout redirection 
+                    OnRedirectToIdentityProviderForSignOut = (context) =>
+                    {
+                        
+                    }
+                };*/
+            });
+            /*services.AddDefaultIdentity<IdentityUser>();
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings.
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+
+                // Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings.
+                options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = false;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.SlidingExpiration = true;
+            });
+            */
         }
     }
 }

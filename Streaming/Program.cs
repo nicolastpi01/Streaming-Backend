@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DotNetEnv;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,9 +22,11 @@ namespace Streaming
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                //var context = services.ServiceProvider.GetService<MediaContext>();
                 var context = services.GetService<MediaContext>();
-                //DataSeeder.SeedCountries(context);
+                
+                //var config = host.Services.GetRequiredService<IConfiguration>();
+                //var userList = config.GetSection("userList").Get<List<string>>();
+
                 new MediaContextSeed().SeedAsync(context)
                 .Wait();
             }
