@@ -15,7 +15,6 @@ namespace Streaming.Controllers
     [ApiController]
     public class VideoController : ControllerBase
     {
-        //private MediaRepo repo;
         private MediaContext Context;
 
         public VideoController(MediaContext contexto)
@@ -46,23 +45,13 @@ namespace Streaming.Controllers
         }
 
 
-        /*
-         [HttpGet]
-         [Route("videos")]
-         public string GetVideos()
-         {
-            return Context.Media
-                .Select(pair => new VideosResult( pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
-                .ToJson();  
-        } */
-
         [HttpGet]
         [Route("videos")]
-        public string GetVideos()
+        public Task<List<VideosResult>> GetVideos()
         {
             return Context.Medias
-                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))
-                .ToJson();
+                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
+                .ToListAsync();
         }
 
         [HttpGet]
@@ -75,6 +64,7 @@ namespace Streaming.Controllers
                 .ToListAsync();
         }
 
+
         [HttpGet]
         [Route("cargar")]
         public IActionResult GuargarVideo()
@@ -85,36 +75,24 @@ namespace Streaming.Controllers
             return Ok();
         }
 
-        /*
-         * La busqueda de videos a partir de una busqueda string
+        
+  
+        //La busqueda de videos a partir de una busqueda string
         [HttpGet]
-        [Route("videosByBsq")]
-        public ActionResult getVideosByBsq(string busqueda)
+        [Route("search")]
+        public Task<List<VideosResult>> getSearchVideos(string busqueda)
         {
-            try
-            {
-                var rutas = Context.Media
-                    .Where(media => media.Nombre.Contains(busqueda))
-                    .Select(media => media.Ruta).Take(10);
-
-                rutas.
-                string path = Path.GetFullPath(ruta);
-                var fileStream = System.IO.File.Open(path, FileMode.Open);
-
-                return File(fileStream, "application/octet-stream");
-            }
-            catch (InvalidOperationException e)
-            {
-                return new EmptyResult();
-            }
-        } */
-
+            return Context.Medias
+                .Where(pair => pair.Nombre.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
+                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
+                .ToListAsync();
+        } 
     }
 
     public class VideosResult
     {
-        public string indice;
-        public string nombre;
+        public string indice { get; set; }
+        public string nombre { get; set; }
 
         public VideosResult(string indice, string nombre)
         {
