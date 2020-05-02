@@ -9,6 +9,10 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Streaming.Infraestructura;
 using Streaming.Infraestructura.Repositories.contracts;
 using Streaming.Infraestructura.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace Streaming
@@ -30,8 +34,7 @@ namespace Streaming
                 {
                     builder.AllowAnyMethod().AllowAnyHeader()
                            .AllowAnyOrigin(); //.WithOrigins("http://localhost:3000").
-
-                    //.AllowCredentials();
+                           //.AllowCredentials();
                 }));
 
             services.AddDbContextPool<MediaContext>(options => options
@@ -41,13 +44,13 @@ namespace Streaming
                     .ServerVersion(new Version(8, 0, 18), ServerType.MySql)
                     
             ));
-            
+
+            //services.AddDbContext<MediaContext>();
             services.AddScoped<DbContext, MediaContext>();
             services.AddTransient<IMediaRepository, MediaRepository>();
-
+            //ConfigureAuth(services);
             services.AddControllers();
             services.AddMvc();
-            services.AddScoped<DbContext, MediaContext>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime hostApplicationLifetime)
@@ -65,15 +68,41 @@ namespace Streaming
             {
                 builder.AllowAnyMethod().AllowAnyHeader()
                        .AllowAnyOrigin();
-
             });
 
+            app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
 
                 endpoints.MapControllers();
             });
+        }
+
+        public void ConfigureAuth(IServiceCollection services)
+        {
+            // Add authentication services
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddOpenIdConnect("Auth0", options => {
+                // Configure the scope
+                options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    options.Scope.Add("email");
+
+                // Set the correct name claim type
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "name",
+                    RoleClaimType = "https://schemas.quickstarts.com/roles"
+                };
+            });
+            
         }
     }
 }

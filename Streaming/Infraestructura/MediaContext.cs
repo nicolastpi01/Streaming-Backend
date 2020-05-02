@@ -8,6 +8,8 @@ namespace Streaming.Infraestructura
     {
         public const string DEFAULT_SCHEMA = "Media";
         public DbSet<MediaEntity> Medias { get; set; }
+        //public DbSet<UserEntity> Users { get; set; }
+
         public MediaContext(DbContextOptions<MediaContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,6 +22,13 @@ namespace Streaming.Infraestructura
                 entity.Property(_ => _.Nombre).IsRequired();
                 entity.Property(_ => _.Ruta).IsRequired();
             });
+            /*
+            modelBuilder.Entity<UserEntity>(entity =>
+            {
+                entity.HasKey(_ => _.Id);
+                entity.Property(_ => _.Alias).IsRequired();
+                entity.Property(_ => _.Mail).IsRequired();
+            });*/
         }
     }
      
