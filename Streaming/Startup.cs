@@ -43,7 +43,7 @@ namespace Streaming
 
             services.AddDbContextPool<MediaContext>(options => options
                 // replace with your connection string
-                .UseMySql($"server=localhost;user id={Configuration["SQLUSER"]};Pwd={Configuration["SQLPASS"]};persistsecurityinfo=True;database=tip_streaming;", mySqlOptions => mySqlOptions
+                .UseMySql($"server=localhost;user id={Configuration["SQLUSER"]};Pwd={Configuration["SQLPASS"]};persistsecurityinfo=True;database=mysql;", mySqlOptions => mySqlOptions
                     // replace with your Server Version and Type
                     .ServerVersion(new Version(8, 0, 18), ServerType.MySql)
             ));
