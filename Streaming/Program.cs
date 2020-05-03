@@ -21,8 +21,8 @@ namespace Streaming
                 //var config = host.Services.GetRequiredService<IConfiguration>();
                 //var userList = config.GetSection("userList").Get<List<string>>();
 
-                new MediaContextSeed().SeedAsync(context)
-                .Wait();
+                new MediaContextSeed().SeedAsync(context);
+                
             }
             host.Run();
         }
@@ -39,6 +39,9 @@ namespace Streaming
 
     }
 }
+
+
+
 
 
 
