@@ -24,8 +24,7 @@ namespace Streaming
                 //var context = services.ServiceProvider.GetService<MediaContext>();
                 var context = services.GetService<MediaContext>();
                 //DataSeeder.SeedCountries(context);
-                new MediaContextSeed().SeedAsync(context)
-                .Wait();
+                new MediaContextSeed().SeedAsync(context);
             }
             host.Run();
         }

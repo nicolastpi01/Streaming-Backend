@@ -12,7 +12,7 @@ namespace Streaming.Infraestructura
         
         private MediaContext _context;
 
-        public async Task SeedAsync(MediaContext context)
+        public void SeedAsync(MediaContext context)
         {
             this._context = context;
             using (context)
@@ -20,7 +20,7 @@ namespace Streaming.Infraestructura
                 //ESTE SEED LO QUE HACE ES QUE SI NO HAY DATOS DE CONFIGURACION , QUE SE IMPORTANTAN DESDE ARCHIVOS CSV, SE REALIZA
                 //LA MIGRACIÓN AUTOMATICAMENTE
 
-                //context.Database.Migrate();
+                context.Database.Migrate();
                 
                 if (!context.Media.Any())
                 {
@@ -32,7 +32,7 @@ namespace Streaming.Infraestructura
                     media.porcentaje = 10;
                     context.Media.Add(media);
                 }
-                await context.SaveChangesAsync();
+                context.SaveChanges();
             }
         }
     }
