@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using Streaming.Infraestructura.Entities;
 
 namespace Streaming.Infraestructura
@@ -8,9 +9,10 @@ namespace Streaming.Infraestructura
     {
         public const string DEFAULT_SCHEMA = "Media";
         public DbSet<MediaEntity> Medias { get; set; }
+        
         //public DbSet<UserEntity> Users { get; set; }
 
-        public MediaContext(DbContextOptions<MediaContext> options) : base(options) { }
+        public MediaContext(DbContextOptions<MediaContext> options) : base(options) {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,9 +32,8 @@ namespace Streaming.Infraestructura
     {
         public MediaContext CreateDbContext(string[] args)
         {
-            // .UseMySql($"server=localhost;user id={Configuration["SQLUSER"]};Pwd={Configuration["SQLPASS"]};persistsecurityinfo=True;database={Configuration["DATABASENAME"]};", mySqlOptions => mySqlOptions
-            var optionsBuilder = new DbContextOptionsBuilder<MediaContext>()
-            .UseMySql("server=localhost;user id=root; password=dinocrisis;persistsecurityinfo=True;database=mysql");
+             var optionsBuilder = new DbContextOptionsBuilder<MediaContext>()
+            .UseMySql("server = localhost; user id = root; password=dinocrisis; persistsecurityinfo = True; database = mysql; allowuservariables = True");
             return new MediaContext(optionsBuilder.Options);
         }
     }
