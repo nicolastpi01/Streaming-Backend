@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Streaming.Infraestructura;
 using NuGet.Protocol;
+using Streaming.Infraestructura.Entities;
 
 namespace Streaming.Controllers
 {
@@ -16,10 +17,12 @@ namespace Streaming.Controllers
     public class VideoController : ControllerBase
     {
         private MediaContext Context;
+        private int offset;
 
         public VideoController(MediaContext contexto)
         {
             Context = contexto;
+            offset = 10;
         }
 
         [HttpGet]
@@ -38,7 +41,7 @@ namespace Streaming.Controllers
 
                 return File(fileStream, "application/octet-stream");
             }
-            catch(InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 return new EmptyResult();
             }
@@ -47,9 +50,36 @@ namespace Streaming.Controllers
 
         [HttpGet]
         [Route("videos")]
-        public Task<List<VideosResult>> GetVideos()
+        public async Task<PaginadoResponse> GetVideos(int page)
+        {
+            var total = Context.Medias.Count();
+
+            var indice = page * offset;
+
+            try
+            {
+                var resultado = await Context.Medias
+                                    .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))
+                                    .Skip(indice)
+                                    .Take(offset)
+                                    .ToListAsync();
+
+                return new PaginadoResponse(offset, total, resultado);
+            }
+            catch (Exception e)
+            {
+                var i = e.Message;
+            }
+            return null;
+        }
+
+        //La busqueda de videos a partir de una busqueda string. Requiere paginado
+        [HttpGet]
+        [Route("search")]
+        public Task<List<VideosResult>> getSearchVideos(string busqueda)
         {
             return Context.Medias
+                .Where(pair => pair.Nombre.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
                 .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
                 .ToListAsync();
         }
@@ -70,23 +100,14 @@ namespace Streaming.Controllers
         public IActionResult GuargarVideo()
         {
             Context.Medias
-                .Add(new Infraestructura.Entities.MediaEntity{ Nombre = "a", Ruta = "b" });
+                .Add(new Infraestructura.Entities.MediaEntity { Nombre = "a", Ruta = "b" });
             Context.SaveChanges();
             return Ok();
         }
 
-        
-  
-        //La busqueda de videos a partir de una busqueda string
-        [HttpGet]
-        [Route("search")]
-        public Task<List<VideosResult>> getSearchVideos(string busqueda)
-        {
-            return Context.Medias
-                .Where(pair => pair.Nombre.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
-                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
-                .ToListAsync();
-        } 
+
+
+
     }
 
     public class VideosResult
@@ -101,5 +122,21 @@ namespace Streaming.Controllers
         }
     }
 
+    public class PaginadoResponse
+    {
+        public int offset { get; set; }
+        public int size { get; set; }
+
+        public List<VideosResult> page {get; set; }
+    
+        public PaginadoResponse(int offset, int size, List<VideosResult> paginado)
+        {
+            this.offset = offset;
+            this.size = size;
+            this.page = paginado;
+        }
+    }
+
 }
+ 
  
