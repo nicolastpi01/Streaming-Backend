@@ -9,8 +9,8 @@ namespace Streaming.Infraestructura
     {
         public const string DEFAULT_SCHEMA = "Media";
         public DbSet<MediaEntity> Medias { get; set; }
-        
-        //public DbSet<UserEntity> Users { get; set; }
+
+        public MediaContext() : base() { }
 
         public MediaContext(DbContextOptions<MediaContext> options) : base(options) {}
 
