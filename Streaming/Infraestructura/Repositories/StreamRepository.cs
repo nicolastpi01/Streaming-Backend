@@ -39,16 +39,39 @@ namespace Streaming.Infraestructura.Repositories
 
         public Task<List<string>> GetSugerencias(string sugerencia)
         {
-            return GetMedias()
-                .Select(pair => pair.Nombre) //esto es el map, viene por extension de LINQ; solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
-                .Where(pair => pair.Contains(sugerencia)).Take(10) // el condicional es mas grande, toma las primeras 10 sugerencias
-                .ToListAsync();
+            IQueryable<string> result;
+            string lower = "";
+            if (sugerencia != null) lower = sugerencia.ToLower();
+            result = GetMedias()
+                            .Where(pair => pair.Nombre.ToLower().Contains(lower))
+                            .Select(pair => pair.Nombre);
+            if (result.Count() > 0) return result.Take(10).ToListAsync();
+
+            result = GetMedias()
+                           .Where(pair => pair.Autor.ToLower().Contains(lower))
+                           .Select(pair => pair.Autor);
+            if (result.Count() > 0) return result.Take(1).ToListAsync();
+
+            result = GetMedias() /* revisar que sepa separar por comas los tags en las sugerencias oo crear otra tabla para los tags */
+                           .Where(pair => pair.Tags.ToLower().Contains(lower))
+                           .Select(pair => pair.Tags);
+            if (result.Count() > 0) return result.Take(1).ToListAsync();
+
+            result = GetMedias() /* revisar este ultimo, se puede hacer algo mejor */
+                   .Where(pair => pair.Descripcion.ToLower().Contains(lower))
+                   .Select(pair => pair.Descripcion);
+            return result.Take(1).ToListAsync();
+
+            /*
+             * return 
+                    .Select(pair => pair.Nombre)
+                    .Where(pair => pair.Contains(sugerencia)).Take(10).ToListAsync();*/
         }
 
         public Task<List<MediaEntity>> SearchVideos(string busqueda)
         {
             return GetMedias()
-                            .Where(pair => pair.Nombre.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
+                            .Where(pair => pair.Nombre.Contains(busqueda) || pair.Autor.Contains(busqueda) || pair.Descripcion.Contains(busqueda) || pair.Tags.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
                             .ToListAsync();
         }
 

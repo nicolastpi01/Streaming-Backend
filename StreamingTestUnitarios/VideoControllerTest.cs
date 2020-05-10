@@ -15,6 +15,8 @@ using Xunit;
 using System.Threading.Tasks;
 using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Streaming.Infraestructura.Repositories.contracts;
+using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace StreamingTestUnitarios
 {
@@ -64,24 +66,37 @@ namespace StreamingTestUnitarios
             var controlador = new VideoController(Repo.Object);
 
             var result = controlador.getFileById(It.IsAny<string>());
-            result.ShouldBeOfType<Microsoft.AspNetCore.Mvc.EmptyResult>();
+            result.ShouldBeOfType<EmptyResult>();
         }
 
-        //[Fact]
+        [Fact]
         public void TestGetVideoPorIdEntregaUnArchivo()
         {
-            var fixture = new Fixture()
-                .Customize(new AutoMoqCustomization());
 
-            //System.IO.File basket = fixture.Freeze<System.IO.File>();
+                var testingDirec = Directory.GetParent(System.IO.Directory.GetCurrentDirectory());
+                string solutionDirec = testingDirec.Parent.Parent.Parent.FullName;
+                string directorio = Path.Combine(solutionDirec, "Streaming\\Movies\\");
+                var fileStream = System.IO.File.Open(directorio + "1280.mp4", System.IO.FileMode.Open);
 
-            var Repo = new Mock<IStreamRepository>();
-            Repo.Setup(obj => obj.getMediaById(It.IsAny<string>()).Ruta).Returns("");
-            var controlador = new VideoController(Repo.Object);
+            try
+            {
+                var mockEntity = Mock.Of<MediaEntity>(obj =>
+                    obj.Ruta == It.IsAny<string>()
+                );
+                var Repo = new Mock<IStreamRepository>();
+                var controlador = new VideoController(Repo.Object);
+                Repo.Setup(obj => obj.GetFile(It.IsAny<string>(), controlador)).Returns(controlador.File(fileStream, "application/octet-stream"));
+                Repo.Setup(obj => obj.getMediaById(It.IsAny<string>())).Returns(mockEntity);
 
-            var result = controlador.getFileById(It.IsAny<string>());
-            result.ShouldBeOfType<Microsoft.AspNetCore.Mvc.FileStreamResult>();
-            //Etc
+                var result = controlador.getFileById(It.IsAny<string>());
+                result.ShouldBeOfType<FileStreamResult>();
+                //Etc
+            }
+            catch(Exception e)
+            {
+                fileStream.Close();
+                Assert.True(false);
+            }
         }
 
         [Fact]

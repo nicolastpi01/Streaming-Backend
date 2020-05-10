@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.IO;
-using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Streaming.Infraestructura;
-using NuGet.Protocol;
 using Streaming.Infraestructura.Entities;
 using Streaming.Infraestructura.Repositories.contracts;
+using Microsoft.AspNetCore.Routing;
+
 
 namespace Streaming.Controllers
 {
@@ -52,7 +51,7 @@ namespace Streaming.Controllers
             try
             {
                 List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset);
-                List<VideosResult> resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre)) as List<VideosResult>;
+                List<VideosResult> resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Tags, pair.Autor)) as List<VideosResult>;
                 return new PaginadoResponse(offset, Repo.GetTotalVideos(), resMap);
             }
             catch (Exception e)
@@ -70,7 +69,7 @@ namespace Streaming.Controllers
         public async Task<IEnumerable<VideosResult>> getSearchVideos(string busqueda)
         {
             return (await Repo.SearchVideos(busqueda))
-                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre));
+                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Tags, pair.Autor));
         }
 
         [HttpGet]
@@ -79,17 +78,25 @@ namespace Streaming.Controllers
         {
             return Repo.GetSugerencias(sugerencia);
         }
+        
     }
 
     public class VideosResult
     {
         public string indice { get; set; }
         public string nombre { get; set; }
+        public string descripcion { get; set; }
+        public string tags { get; set; }
+        public string autor { get; set; }
+        //public string duracion { get; set; }
 
-        public VideosResult(string indice, string nombre)
+        public VideosResult(string indice, string nombre, string descripcion, string tags, string autor)
         {
             this.indice = indice;
             this.nombre = nombre;
+            this.descripcion = descripcion;
+            this.tags = tags;
+            this.autor = autor;
         }
     }
 

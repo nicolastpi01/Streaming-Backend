@@ -24,10 +24,13 @@ namespace Streaming.Infraestructura
                 
                 if (!context.Medias.Any())
                 {
-                    context.Medias.Add(new MediaEntity { Nombre="1280" , Ruta= "Movies/1280.mp4" });
-                    context.Medias.Add(new MediaEntity { Nombre = "SampleVideo1", Ruta = "Movies/SampleVideo_1280x720_10mb.mp4" });
-                    context.Medias.Add(new MediaEntity { Nombre = "SampleVideo2", Ruta = "Movies/SampleVideo_1280x720_5mb.mp4" });
-                    context.Medias.Add(new MediaEntity { Nombre = "small", Ruta = "Movies/small.mp4" });
+                    
+                    context.Medias.Add(new MediaEntity { Nombre = "1280", Ruta = "Movies/1280.mp4", Descripcion = "Una descripcion", Tags="movies, music", Autor = "NicolasTskTsk" });
+                    context.Medias.Add(new MediaEntity { Nombre = "sampleVideo1", Ruta = "Movies/sampleVideo_1280x720_10mb.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
+                    context.Medias.Add(new MediaEntity { Nombre = "sampleVideo2", Ruta = "Movies/sampleVideo_1280x720_5mb.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
+                    context.Medias.Add(new MediaEntity { Nombre = "small", Ruta = "Movies/small.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
+                    context.Medias.Add(new MediaEntity { Nombre = "dolbycanyon", Ruta = "Movies/dolbycanyon.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
+                    context.Medias.Add(new MediaEntity { Nombre = "star_trails", Ruta = "Movies/star_trails.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
                 }
                 context.SaveChanges();
             }
