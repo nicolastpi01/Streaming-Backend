@@ -54,7 +54,7 @@ namespace Streaming.Controllers
             try
             {
                 List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset);
-                var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre)) as List<VideosResult>;
+                List<VideosResult> resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre)) as List<VideosResult>;
                 return new PaginadoResponse(offset, Repo.GetTotalVideos(), resMap);
             }
             catch (Exception e)
