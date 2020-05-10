@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.IO;
-using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Streaming.Infraestructura;
-using NuGet.Protocol;
-using Streaming.Infraestructura.Entities;
+using Microsoft.AspNetCore.Routing;
 
 namespace Streaming.Controllers
 {
@@ -59,7 +57,7 @@ namespace Streaming.Controllers
             try
             {
                 var resultado = await Context.Medias
-                                    .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))
+                                    .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Tags, pair.Autor))
                                     .Skip(indice)
                                     .Take(offset)
                                     .ToListAsync();
@@ -79,8 +77,8 @@ namespace Streaming.Controllers
         public Task<List<VideosResult>> getSearchVideos(string busqueda)
         {
             return Context.Medias
-                .Where(pair => pair.Nombre.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
-                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre))  //esto es el map, viene por extension de LINQ
+                .Where(pair => pair.Nombre.Contains(busqueda) || pair.Autor.Contains(busqueda) || pair.Descripcion.Contains(busqueda) || pair.Tags.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
+                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Tags, pair.Autor))  //esto es el map, viene por extension de LINQ
                 .ToListAsync();
         }
 
@@ -88,10 +86,30 @@ namespace Streaming.Controllers
         [Route("sugerencias")]
         public Task<List<string>> GetSugerencias(string sugerencia) // las sugerencias para una posible busqueda
         {
-            return Context.Medias
-                .Select(pair => pair.Nombre) //esto es el map, viene por extension de LINQ; solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
-                .Where(pair => pair.Contains(sugerencia)).Take(10) // el condicional es mas grande, toma las primeras 10 sugerencias
-                .ToListAsync();
+            IQueryable<string> result;
+            string lower = "";
+            if (sugerencia != null) lower = sugerencia.ToLower();
+            result = Context.Medias
+                            .Where(pair => pair.Nombre.ToLower().Contains(lower)) 
+                            .Select(pair => pair.Nombre);
+
+            if (result.Count() > 0) return result.Take(10).ToListAsync();
+
+            result = Context.Medias
+                           .Where(pair => pair.Autor.ToLower().Contains(lower))
+                           .Select(pair => pair.Autor);
+            if (result.Count() > 0) return result.Take(1).ToListAsync();
+
+            result = Context.Medias /* revisar que sepa separar por comas los tags en las sugerencias oo crear otra tabla para los tags */
+                           .Where(pair => pair.Tags.ToLower().Contains(lower))
+                           .Select(pair => pair.Tags);
+            if (result.Count() > 0) return result.Take(1).ToListAsync();
+
+                    Context.Medias /* revisar este ultimo, se puede hacer algo mejor */
+                           .Where(pair => pair.Descripcion.ToLower().Contains(lower))
+                           .Select(pair => pair.Descripcion);
+                            return result.Take(1).ToListAsync();
+
         }
 
 
@@ -114,11 +132,18 @@ namespace Streaming.Controllers
     {
         public string indice { get; set; }
         public string nombre { get; set; }
+        public string descripcion { get; set; }
+        public string tags { get; set; }
+        public string autor { get; set; }
+        //public string duracion { get; set; }
 
-        public VideosResult(string indice, string nombre)
+        public VideosResult(string indice, string nombre, string descripcion, string tags, string autor)
         {
             this.indice = indice;
             this.nombre = nombre;
+            this.descripcion = descripcion;
+            this.tags = tags;
+            this.autor = autor;
         }
     }
 

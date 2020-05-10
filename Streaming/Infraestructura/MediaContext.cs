@@ -23,6 +23,9 @@ namespace Streaming.Infraestructura
                 entity.HasKey(_ => _.Id);
                 entity.Property(_ => _.Nombre).IsRequired();
                 entity.Property(_ => _.Ruta).IsRequired();
+                entity.Property(_ => _.Descripcion);
+                entity.Property(_ => _.Tags);
+                entity.Property(_ => _.Autor);
             });
             
         }
