@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Streaming.Infraestructura.Entities;
 using Streaming.Infraestructura.Repositories.contracts;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,6 +55,12 @@ namespace Streaming.Infraestructura.Repositories
         public int GetTotalVideos()
         {
             return GetMedias().Count();
+        }
+
+        public FileStreamResult GetFile(string path, ControllerBase controller)
+        {
+            var fileStream = System.IO.File.Open(path, FileMode.Open);
+            return controller.File(fileStream, "application/octet-stream");
         }
 
         private DbSet<MediaEntity> GetMedias()

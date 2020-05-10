@@ -34,9 +34,7 @@ namespace Streaming.Controllers
             try
             {
                 string path = Path.GetFullPath(Repo.getMediaById(fileId).Ruta);
-                var fileStream = System.IO.File.Open(path, FileMode.Open);
-
-                return File(fileStream, "application/octet-stream");
+                return Repo.GetFile(path,this);
             }
             catch (InvalidOperationException)
             {

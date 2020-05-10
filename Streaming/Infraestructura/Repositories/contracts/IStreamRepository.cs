@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Streaming.Controllers;
 using Streaming.Infraestructura.Entities;
 
@@ -14,5 +15,6 @@ namespace Streaming.Infraestructura.Repositories.contracts
         Task<List<string>> GetSugerencias(string sugerencia);
         Task<List<MediaEntity>> SearchVideos(string busqueda);
         int GetTotalVideos();
+        FileStreamResult GetFile(string path, ControllerBase controller);
     }
 }
