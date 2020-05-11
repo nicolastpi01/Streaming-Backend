@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
 using Streaming.Infraestructura.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Streaming.Infraestructura
 {
@@ -25,12 +23,39 @@ namespace Streaming.Infraestructura
                 if (!context.Medias.Any())
                 {
                     
-                    context.Medias.Add(new MediaEntity { Nombre = "1280", Ruta = "Movies/1280.mp4", Descripcion = "Una descripcion", Tags="movies, music", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "sampleVideo1", Ruta = "Movies/sampleVideo_1280x720_10mb.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "sampleVideo2", Ruta = "Movies/sampleVideo_1280x720_5mb.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "small", Ruta = "Movies/small.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "dolbycanyon", Ruta = "Movies/dolbycanyon.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "star_trails", Ruta = "Movies/star_trails.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
+                    TagEntity sports = new TagEntity { Nombre = "sports", Media = { } };
+                    TagEntity news = new TagEntity { Nombre = "news", Media = { } };
+                    TagEntity music = new TagEntity { Nombre = "music", Media = { } };
+                    TagEntity movies = new TagEntity { Nombre = "movies", Media = { } };
+
+                    /*
+                    context.Tags.Add(new TagEntity { Nombre = sports.Nombre, Media = sports.Media });
+                    context.Tags.Add(new TagEntity { Nombre = news.Nombre, Media = news.Media });
+                    context.Tags.Add(new TagEntity { Nombre = music.Nombre, Media = music.Media });
+                    context.Tags.Add(new TagEntity { Nombre = movies.Nombre, Media = movies.Media });
+                    */
+
+
+                    List<TagEntity> lista = new List<TagEntity>();
+                    lista.Add(sports);
+                    lista.Add(movies);
+                    //lista.Add(news);
+                    //lista.Add(music);
+
+                    /*
+                    List<TagEntity> lista2 = new List<TagEntity>();
+                    lista.Add(news);
+                    lista.Add(music);
+                    */
+
+                    context.Medias.Add(new MediaEntity { Nombre = "1280", Ruta = "Movies/1280.mp4", Descripcion = "Una descripcion", Tags= lista, Autor = "NicolasTskTsk" });
+                    context.Medias.Add(new MediaEntity { Nombre = "sampleVideo1", Ruta = "Movies/sampleVideo_1280x720_10mb.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
+                    context.Medias.Add(new MediaEntity { Nombre = "sampleVideo2", Ruta = "Movies/sampleVideo_1280x720_5mb.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
+                    context.Medias.Add(new MediaEntity { Nombre = "small", Ruta = "Movies/small.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
+                    context.Medias.Add(new MediaEntity { Nombre = "dolbycanyon", Ruta = "Movies/dolbycanyon.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
+                    context.Medias.Add(new MediaEntity { Nombre = "star_trails", Ruta = "Movies/star_trails.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
+
+                    
                 }
                 context.SaveChanges();
             }

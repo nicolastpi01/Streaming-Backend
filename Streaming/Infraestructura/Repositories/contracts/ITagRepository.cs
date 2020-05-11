@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Streaming.Infraestructura.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Streaming.Infraestructura.Entities;
 
 namespace Streaming.Infraestructura.Repositories.contracts
 {
-    public interface IMediaRepository : IBaseRepository<MediaEntity>
+    interface ITagRepository : IBaseRepository<TagEntity>
     {
-        
     }
 }

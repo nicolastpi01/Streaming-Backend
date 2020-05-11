@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Streaming.Infraestructura;
 using Microsoft.AspNetCore.Routing;
+using Streaming.Infraestructura.Entities;
 
 namespace Streaming.Controllers
 {
@@ -46,6 +47,7 @@ namespace Streaming.Controllers
         }
 
 
+        
         [HttpGet]
         [Route("videos")]
         public async Task<PaginadoResponse> GetVideos(int page)
@@ -57,7 +59,7 @@ namespace Streaming.Controllers
             try
             {
                 var resultado = await Context.Medias
-                                    .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Tags, pair.Autor))
+                                    .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor))
                                     .Skip(indice)
                                     .Take(offset)
                                     .ToListAsync();
@@ -69,19 +71,26 @@ namespace Streaming.Controllers
                 var i = e.Message;
             }
             return null;
-        }
+        } 
 
+
+
+        
         //La busqueda de videos a partir de una busqueda string. Requiere paginado
         [HttpGet]
         [Route("search")]
         public Task<List<VideosResult>> getSearchVideos(string busqueda)
         {
             return Context.Medias
-                .Where(pair => pair.Nombre.Contains(busqueda) || pair.Autor.Contains(busqueda) || pair.Descripcion.Contains(busqueda) || pair.Tags.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
-                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Tags, pair.Autor))  //esto es el map, viene por extension de LINQ
+                .Where(pair => pair.Nombre.Contains(busqueda) || pair.Autor.Contains(busqueda) || pair.Descripcion.Contains(busqueda) || pair.Tags.Any(x => x.Nombre.Equals(busqueda) ))  // || pair.Tags.Any(x => x.Nombre == busqueda)
+                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor))  
                 .ToListAsync();
-        }
+        } 
 
+
+
+
+        
         [HttpGet]
         [Route("sugerencias")]
         public Task<List<string>> GetSugerencias(string sugerencia) // las sugerencias para una posible busqueda
@@ -100,17 +109,18 @@ namespace Streaming.Controllers
                            .Select(pair => pair.Autor);
             if (result.Count() > 0) return result.Take(1).ToListAsync();
 
-            result = Context.Medias /* revisar que sepa separar por comas los tags en las sugerencias oo crear otra tabla para los tags */
-                           .Where(pair => pair.Tags.ToLower().Contains(lower))
-                           .Select(pair => pair.Tags);
+
+            result = Context.Tags // Retorna un tag que coincide con la busqueda, tocar la busqueda al apretar el boton para que tenga en cuenta los tags 
+                           .Where(pair => pair.Nombre.Contains(lower))
+                           .Select(pair => pair.Nombre);             
             if (result.Count() > 0) return result.Take(1).ToListAsync();
-
-                    Context.Medias /* revisar este ultimo, se puede hacer algo mejor */
+            
+            Context.Medias // Retorna como sugerencia el nombre del video o videos que coinciden por descripcion 
                            .Where(pair => pair.Descripcion.ToLower().Contains(lower))
-                           .Select(pair => pair.Descripcion);
-                            return result.Take(1).ToListAsync();
+                           .Select(pair => pair.Nombre);
+                            return result.Take(10).ToListAsync();
 
-        }
+        } 
 
 
         [HttpGet]
@@ -133,16 +143,16 @@ namespace Streaming.Controllers
         public string indice { get; set; }
         public string nombre { get; set; }
         public string descripcion { get; set; }
-        public string tags { get; set; }
+        //public List<TagEntity> tags { get; set; }
         public string autor { get; set; }
         //public string duracion { get; set; }
 
-        public VideosResult(string indice, string nombre, string descripcion, string tags, string autor)
+        public VideosResult(string indice, string nombre, string descripcion, string autor)
         {
             this.indice = indice;
             this.nombre = nombre;
             this.descripcion = descripcion;
-            this.tags = tags;
+            //this.tags = tags;
             this.autor = autor;
         }
     }
