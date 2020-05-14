@@ -89,33 +89,41 @@ namespace StreamingTestUnitarios
         [Fact]
         public void TestGetVideoPorIdEntregaUnArchivo()
         {
-            //var fileStream = System.IO.File.Open(directorio + "1280.mp4", System.IO.FileMode.Open);
+            string ruta = buscarpelicula() + "1280.mp4";
+            var fileStream = File.Open( ruta, System.IO.FileMode.Open);
+            /*
             var fixture = new Fixture();
-            //fixture.Customizations.Add( new PropertyTypeOmitter(typeof(FileStreamResult)));
+            fixture.Customizations.Add( new PropertyTypeOmitter(typeof(FileStreamResult)));
             fixture //.Customize(new FileStreamResultCustom())
                    .Customize(new AutoMoqCustomization())
                    .Behaviors.Add(new OmitOnRecursionBehavior());
-            var fileStream = fixture.Create<FileStreamResult>() as FileStreamResult; //Lanza excepcion:
+            //var fileStream = fixture.Create<FileStreamResult>() as FileStreamResult; //Lanza excepcion:
             //AutoFixture.ObjectCreationExceptionWithPath : AutoFixture was unable to create an instance from Microsoft.AspNetCore.Mvc.FileStreamResult because creation unexpectedly failed with exception.
             //Please refer to the inner exception to investigate the root cause of the failure.
+            */
             try
             {
                 var mockEntity = Mock.Of<MediaEntity>(obj =>
-                    obj.Ruta == It.IsAny<string>()
+                    obj.Ruta == "Streaming\\Movies\\1280.mp4"
                 );
                 var Repo = new Mock<IStreamRepository>();
                 var controlador = new VideoController(Repo.Object);
-                Repo.Setup(obj => obj.GetFile(It.IsAny<string>(), controlador)).Returns(fileStream);//controlador.File(fileStream, "application/octet-stream"));
+                Repo.Setup(obj => obj.GetFile(It.IsAny<string>(), controlador))
+                    .Returns(controlador.File(fileStream, "application/octet-stream"));
                 Repo.Setup(obj => obj.getMediaById(It.IsAny<string>())).Returns(mockEntity);
 
                 var result = controlador.getFileById(It.IsAny<string>());
                 result.ShouldBeOfType<FileStreamResult>();
+                (result as FileStreamResult).FileStream.ShouldBe(fileStream);
                 //Etc
             }
             catch(Exception e)
             {
-                //fileStream.Close();
                 Assert.True(false);
+            }
+            finally
+            {
+                fileStream.Close();
             }
         }
 

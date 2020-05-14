@@ -82,7 +82,8 @@ namespace Streaming.Infraestructura.Repositories
 
         public FileStreamResult GetFile(string path, ControllerBase controller)
         {
-            var fileStream = System.IO.File.Open(path, FileMode.Open);
+            string pathBase = Path.GetFullPath("Streaming");
+            var fileStream = System.IO.File.Open(pathBase + path, FileMode.Open);
             return controller.File(fileStream, "application/octet-stream");
         }
 

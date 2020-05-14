@@ -32,8 +32,7 @@ namespace Streaming.Controllers
         {
             try
             {
-                string path = Path.GetFullPath(Repo.getMediaById(fileId).Ruta);
-                return Repo.GetFile(path,this);
+                return Repo.GetFile(Repo.getMediaById(fileId).Ruta, this);
             }
             catch (InvalidOperationException)
             {
