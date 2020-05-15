@@ -5,9 +5,10 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Streaming.Infraestructura;
-using Microsoft.AspNetCore.Routing;
 using Streaming.Infraestructura.Entities;
+using Streaming.Infraestructura.Repositories.contracts;
+using Microsoft.AspNetCore.Routing;
+
 
 namespace Streaming.Controllers
 {
@@ -15,12 +16,13 @@ namespace Streaming.Controllers
     [ApiController]
     public class VideoController : ControllerBase
     {
-        private MediaContext Context;
+        public IStreamRepository Repo { get; private set; }
+
         private int offset;
 
-        public VideoController(MediaContext contexto)
+        public VideoController(IStreamRepository repo)
         {
-            Context = contexto;
+            Repo = repo;
             offset = 10;
         }
 
@@ -30,15 +32,7 @@ namespace Streaming.Controllers
         {
             try
             {
-                var ruta = Context.Medias
-                    .Where(media => media.Id.ToString().Equals(fileId))
-                    .Select(media => media.Ruta)
-                    .Single();
-
-                string path = Path.GetFullPath(ruta);
-                var fileStream = System.IO.File.Open(path, FileMode.Open);
-
-                return File(fileStream, "application/octet-stream");
+                return Repo.GetFile(Repo.getMediaById(fileId).Ruta, this);
             }
             catch (InvalidOperationException)
             {
@@ -52,12 +46,11 @@ namespace Streaming.Controllers
         [Route("videos")]
         public async Task<PaginadoResponse> GetVideos(int page)
         {
-            var total = Context.Medias.Count();
-
             var indice = page * offset;
 
             try
             {
+/*<<<<<<< HEAD
                 var resultado = await Context.Medias
                                     .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor))
                                     .Skip(indice)
@@ -65,6 +58,10 @@ namespace Streaming.Controllers
                                     .ToListAsync();
 
                 return new PaginadoResponse(offset, total, resultado);
+=======*/
+                List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset); //abajo habia el constructor tenia: "pair.Tags,"
+                var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)).ToList() as List<VideosResult>;
+                return new PaginadoResponse(offset, Repo.GetTotalVideos(), resMap);
             }
             catch (Exception e)
             {
@@ -73,20 +70,14 @@ namespace Streaming.Controllers
             return null;
         } 
 
-
-
-        
         //La busqueda de videos a partir de una busqueda string. Requiere paginado
         [HttpGet]
         [Route("search")]
-        public Task<List<VideosResult>> getSearchVideos(string busqueda)
+        public async Task<IEnumerable<VideosResult>> getSearchVideos(string busqueda)
         {
-            return Context.Medias
-                .Where(pair => pair.Nombre.Contains(busqueda) || pair.Autor.Contains(busqueda) || pair.Descripcion.Contains(busqueda) || pair.Tags.Any(x => x.Nombre.Equals(busqueda) ))  // || pair.Tags.Any(x => x.Nombre == busqueda)
-                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor))  
-                .ToListAsync();
-        } 
-
+            return (await Repo.SearchVideos(busqueda))
+                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)); // pair.Tags,
+        }
 
 
 
@@ -95,47 +86,9 @@ namespace Streaming.Controllers
         [Route("sugerencias")]
         public Task<List<string>> GetSugerencias(string sugerencia) // las sugerencias para una posible busqueda
         {
-            IQueryable<string> result;
-            string lower = "";
-            if (sugerencia != null) lower = sugerencia.ToLower();
-            result = Context.Medias
-                            .Where(pair => pair.Nombre.ToLower().Contains(lower)) 
-                            .Select(pair => pair.Nombre);
-
-            if (result.Count() > 0) return result.Take(10).ToListAsync();
-
-            result = Context.Medias
-                           .Where(pair => pair.Autor.ToLower().Contains(lower))
-                           .Select(pair => pair.Autor);
-            if (result.Count() > 0) return result.Take(1).ToListAsync();
-
-
-            result = Context.Tags // Retorna un tag que coincide con la busqueda, tocar la busqueda al apretar el boton para que tenga en cuenta los tags 
-                           .Where(pair => pair.Nombre.Contains(lower))
-                           .Select(pair => pair.Nombre);             
-            if (result.Count() > 0) return result.Take(1).ToListAsync();
-            
-            Context.Medias // Retorna como sugerencia el nombre del video o videos que coinciden por descripcion 
-                           .Where(pair => pair.Descripcion.ToLower().Contains(lower))
-                           .Select(pair => pair.Nombre);
-                            return result.Take(10).ToListAsync();
-
-        } 
-
-
-        [HttpGet]
-        [Route("cargar")]
-        public IActionResult GuargarVideo()
-        {
-            Context.Medias
-                .Add(new Infraestructura.Entities.MediaEntity { Nombre = "a", Ruta = "b" });
-            Context.SaveChanges();
-            return Ok();
+            return Repo.GetSugerencias(sugerencia);
         }
-
-
-
-
+        
     }
 
     public class VideosResult

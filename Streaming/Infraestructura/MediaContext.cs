@@ -9,10 +9,9 @@ namespace Streaming.Infraestructura
     {
         public const string DEFAULT_SCHEMA = "Media";
         public DbSet<MediaEntity> Medias { get; set; }
-
         public DbSet<TagEntity> Tags { get; set; }
-
         //public DbSet<UserEntity> Users { get; set; }
+
 
         public MediaContext(DbContextOptions<MediaContext> options) : base(options) {}
 
@@ -42,16 +41,5 @@ namespace Streaming.Infraestructura
             
         }
     }
-
-    public class CommonContextDesignFactory : IDesignTimeDbContextFactory<MediaContext>
-    {
-        public MediaContext CreateDbContext(string[] args)
-        {
-             var optionsBuilder = new DbContextOptionsBuilder<MediaContext>()
-            .UseMySql("server = localhost; user id = root; password=dinocrisis; persistsecurityinfo = True; database = mysql; allowuservariables = True");
-            return new MediaContext(optionsBuilder.Options);
-        }
-    }
-
 }
 

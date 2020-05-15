@@ -22,7 +22,6 @@ namespace Streaming.Infraestructura
                 
                 if (!context.Medias.Any())
                 {
-                    
                     TagEntity sports = new TagEntity { Nombre = "sports", Media = { } };
                     TagEntity news = new TagEntity { Nombre = "news", Media = { } };
                     TagEntity music = new TagEntity { Nombre = "music", Media = { } };
@@ -54,8 +53,6 @@ namespace Streaming.Infraestructura
                     context.Medias.Add(new MediaEntity { Nombre = "small", Ruta = "Movies/small.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
                     context.Medias.Add(new MediaEntity { Nombre = "dolbycanyon", Ruta = "Movies/dolbycanyon.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
                     context.Medias.Add(new MediaEntity { Nombre = "star_trails", Ruta = "Movies/star_trails.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
-
-                    
                 }
                 context.SaveChanges();
             }
