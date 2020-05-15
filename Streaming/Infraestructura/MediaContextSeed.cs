@@ -29,8 +29,8 @@ namespace Streaming.Infraestructura
                     context.Medias.Add(new MediaEntity { Nombre = "sampleVideo1", Ruta = "Movies/sampleVideo_1280x720_10mb.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
                     context.Medias.Add(new MediaEntity { Nombre = "sampleVideo2", Ruta = "Movies/sampleVideo_1280x720_5mb.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
                     context.Medias.Add(new MediaEntity { Nombre = "small", Ruta = "Movies/small.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "dolbycanyon", Ruta = "Movies/dolbycanyon.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "star_trails", Ruta = "Movies/star_trails.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
+                    //context.Medias.Add(new MediaEntity { Nombre = "dolbycanyon", Ruta = "Movies/dolbycanyon.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
+                    //context.Medias.Add(new MediaEntity { Nombre = "star_trails", Ruta = "Movies/star_trails.mp4", Descripcion = "Una descripcion", Tags = "other", Autor = "NicolasTskTsk" });
                 }
                 context.SaveChanges();
             }
