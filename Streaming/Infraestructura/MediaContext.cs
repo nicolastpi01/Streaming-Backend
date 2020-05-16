@@ -33,13 +33,17 @@ namespace Streaming.Infraestructura
             {
                 entity.HasKey(_ => _.Id);
                 entity.Property(_ => _.Nombre).IsRequired();
-                //entity.HasOne(p => p.Media)
-                //.WithMany(b => b.Tags);
-                //.HasForeignKey(p => p.MediaId);
+                entity.HasOne(t => t.Media)
+                    .WithMany(t => t.Tags)
+                    .HasForeignKey(t => t.IdMedia);
 
             });
             
         }
     }
 }
+
+
+
+
 

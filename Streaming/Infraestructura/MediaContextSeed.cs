@@ -22,37 +22,28 @@ namespace Streaming.Infraestructura
                 
                 if (!context.Medias.Any())
                 {
-                    TagEntity sports = new TagEntity { Nombre = "sports", Media = { } };
-                    TagEntity news = new TagEntity { Nombre = "news", Media = { } };
-                    TagEntity music = new TagEntity { Nombre = "music", Media = { } };
-                    TagEntity movies = new TagEntity { Nombre = "movies", Media = { } };
 
-                    /*
-                    context.Tags.Add(new TagEntity { Nombre = sports.Nombre, Media = sports.Media });
-                    context.Tags.Add(new TagEntity { Nombre = news.Nombre, Media = news.Media });
-                    context.Tags.Add(new TagEntity { Nombre = music.Nombre, Media = music.Media });
-                    context.Tags.Add(new TagEntity { Nombre = movies.Nombre, Media = movies.Media });
-                    */
+                    MediaEntity m1 = new MediaEntity("1280", "/StreamingMovies/1280.mp4", "Una descripcion", "NiocolasTsk");
+                    MediaEntity m2 = new MediaEntity("sampleVideo1", "/StreamingMovies/sampleVideo_1280x720_10mb.mp4", "Una descripcion", "Mamushka01");
+                    MediaEntity m3 = new MediaEntity("sampleVideo2", "/StreamingMovies/sampleVideo_1280x720_5mb.mp4", "Una descripcion", "PireSusuke");
+                    MediaEntity m4 = new MediaEntity("small", "/StreamingMovies/small.mp4", "Una descripcion", "OtooOCTAVIUS");
+                    MediaEntity m5 = new MediaEntity("dolbycanyon", "/StreamingMovies/dolbycanyon.mp4", "Una descripcion", "DrossRotzank");
+                    MediaEntity m6 = new MediaEntity("star_trails", "/StreamingMovies/star_trails.mp4", "Una descripcion", "KingsAndGenerals");
 
 
-                    List<TagEntity> lista = new List<TagEntity>();
-                    lista.Add(sports);
-                    lista.Add(movies);
-                    //lista.Add(news);
-                    //lista.Add(music);
+                    m1.AddTag(m1.Id, m1, "sports");
+                    m1.AddTag(m1.Id, m1, "movies");
+                    m1.AddTag(m1.Id, m1, "music");
 
-                    /*
-                    List<TagEntity> lista2 = new List<TagEntity>();
-                    lista.Add(news);
-                    lista.Add(music);
-                    */
+                    m2.AddTag(m1.Id, m2, "news");
 
-                    context.Medias.Add(new MediaEntity { Nombre = "1280", Ruta = "Movies/1280.mp4", Descripcion = "Una descripcion", Tags= lista, Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "sampleVideo1", Ruta = "Movies/sampleVideo_1280x720_10mb.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "sampleVideo2", Ruta = "Movies/sampleVideo_1280x720_5mb.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "small", Ruta = "Movies/small.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "dolbycanyon", Ruta = "Movies/dolbycanyon.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
-                    context.Medias.Add(new MediaEntity { Nombre = "star_trails", Ruta = "Movies/star_trails.mp4", Descripcion = "Una descripcion", Autor = "NicolasTskTsk" });
+
+                    context.Medias.Add(m1);
+                    context.Medias.Add(m2);
+                    context.Medias.Add(m3);
+                    context.Medias.Add(m4);
+                    context.Medias.Add(m5);
+                    context.Medias.Add(m6);
                 }
                 context.SaveChanges();
             }

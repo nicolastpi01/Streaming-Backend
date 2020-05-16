@@ -32,7 +32,7 @@ namespace Streaming.Controllers
         {
             try
             {
-                return Repo.GetFile(Repo.getMediaById(fileId).Ruta, this);
+                return Repo.GetFileById(fileId, this);
             }
             catch (InvalidOperationException)
             {
@@ -50,7 +50,7 @@ namespace Streaming.Controllers
 
             try
             {
-/*<<<<<<< HEAD
+/*
                 var resultado = await Context.Medias
                                     .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor))
                                     .Skip(indice)
@@ -58,7 +58,7 @@ namespace Streaming.Controllers
                                     .ToListAsync();
 
                 return new PaginadoResponse(offset, total, resultado);
-=======*/
+*/
                 List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset); //abajo habia el constructor tenia: "pair.Tags,"
                 var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)).ToList() as List<VideosResult>;
                 return new PaginadoResponse(offset, Repo.GetTotalVideos(), resMap);

@@ -7,8 +7,31 @@ namespace Streaming.Infraestructura.Entities
 {
     public class TagEntity : Entity
     {
-        //public int MediaId { get; set; }
+        public int IdMedia { get; private set; }
+        public MediaEntity Media { get; private set; }
         public string Nombre { get; set; }
-        public MediaEntity Media { get; set; }
+
+
+        protected TagEntity()
+        {
+
+        }
+
+        public TagEntity(int IdMedia,
+                          MediaEntity Media,
+                          string Nombre) : this()
+        {
+            this.IdMedia = IdMedia;
+            this.Media = Media;
+            this.Nombre = Nombre;
+        }
+
     }
+
+        
 }
+
+
+
+        
+
