@@ -108,7 +108,7 @@ namespace StreamingTestUnitarios
                 );
                 var Repo = new Mock<IStreamRepository>();
                 var controlador = new VideoController(Repo.Object);
-                Repo.Setup(obj => obj.GetFile(It.IsAny<string>(), controlador))
+                Repo.Setup(obj => obj.GetFileById(It.IsAny<string>(), controlador))
                     .Returns(controlador.File(fileStream, "application/octet-stream"));
                 Repo.Setup(obj => obj.getMediaById(It.IsAny<string>())).Returns(mockEntity);
 
