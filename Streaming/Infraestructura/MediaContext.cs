@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Streaming.Infraestructura.Entities;
+using System.Collections.Generic;
 
 namespace Streaming.Infraestructura
 {
@@ -11,7 +12,7 @@ namespace Streaming.Infraestructura
         public DbSet<MediaEntity> Medias { get; set; }
         public DbSet<TagEntity> Tags { get; set; }
         //public DbSet<UserEntity> Users { get; set; }
-
+        public List<UserEntity> Users { get; set; }
 
         public MediaContext(DbContextOptions<MediaContext> options) : base(options) {}
 

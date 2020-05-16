@@ -8,6 +8,8 @@ namespace Streaming.Infraestructura.Entities
     public class UserEntity : Entity
     {
         public string Alias { get; set; }
+        public string Pass { get; set; }
         public string Mail { get; set; }
+        
     }
 }
