@@ -44,7 +44,7 @@ namespace StreamingTestUnitarios
                 obj.Id == 1 &&
                 obj.Nombre == "Nombre" &&
                 obj.Descripcion == "Descripcion" &&
-                obj.Tags == "Tags" &&
+                //obj.Tags == "Tags" &&
                 obj.Autor == "Autor"
             );
             var lista = Enumerable.Repeat(mockEntity, 1).ToList();
@@ -62,7 +62,7 @@ namespace StreamingTestUnitarios
             var videoresult = result.Result.page[0];
             videoresult.nombre.ShouldBe(mockEntity.Nombre);
             videoresult.descripcion.ShouldBe(mockEntity.Descripcion);
-            videoresult.tags.ShouldBe(mockEntity.Tags);
+            //videoresult.tags.ShouldBe(mockEntity.Tags);
             videoresult.autor.ShouldBe(mockEntity.Autor);
             videoresult.indice.ShouldBe(mockEntity.Id.ToString());
         }
@@ -108,7 +108,7 @@ namespace StreamingTestUnitarios
                 );
                 var Repo = new Mock<IStreamRepository>();
                 var controlador = new VideoController(Repo.Object);
-                Repo.Setup(obj => obj.GetFile(It.IsAny<string>(), controlador))
+                Repo.Setup(obj => obj.GetFileById(It.IsAny<string>(), controlador))
                     .Returns(controlador.File(fileStream, "application/octet-stream"));
                 Repo.Setup(obj => obj.getMediaById(It.IsAny<string>())).Returns(mockEntity);
 

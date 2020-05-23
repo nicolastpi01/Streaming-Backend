@@ -32,7 +32,7 @@ namespace Streaming.Controllers
         {
             try
             {
-                return Repo.GetFile(Repo.getMediaById(fileId).Ruta, this);
+                return Repo.GetFileById(Repo.getMediaById(fileId).Ruta, this);
             }
             catch (InvalidOperationException)
             {
@@ -40,6 +40,19 @@ namespace Streaming.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("getImagenById")]
+        public ActionResult getImagenById(string fileId)
+        {
+            try
+            {
+                return Repo.GetImagenById(fileId, this);
+            }
+            catch (InvalidOperationException)
+            {
+                return new EmptyResult();
+            }
+        }
 
         [HttpGet]
         [Route("videos")]
@@ -50,7 +63,7 @@ namespace Streaming.Controllers
             try
             {
                 List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset);
-                var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Tags, pair.Autor)).ToList() as List<VideosResult>;
+                var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, "pair.Tags", pair.Autor)).ToList() as List<VideosResult>;
                 return new PaginadoResponse(offset, Repo.GetTotalVideos(), resMap);
             }
             catch (Exception e)
@@ -68,7 +81,7 @@ namespace Streaming.Controllers
         public async Task<IEnumerable<VideosResult>> getSearchVideos(string busqueda)
         {
             return (await Repo.SearchVideos(busqueda))
-                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Tags, pair.Autor));
+                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, "pair.Tags", pair.Autor));
         }
 
         [HttpGet]

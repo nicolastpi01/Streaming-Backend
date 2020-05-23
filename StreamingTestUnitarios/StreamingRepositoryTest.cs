@@ -34,7 +34,8 @@ namespace StreamingTestUnitarios
         [Fact]
         public async void TestPaginarMediaConVideoDaListaConEseElemento()
         {
-            var entidadUnica = new MediaEntity { Autor = "Autor", Descripcion = "Descripcion", Nombre = "Nombre", Ruta = "Ruta", Tags = "Tags" };
+            var entidadUnica = new MediaEntity("Nombre", "Ruta", "Descripcion", "Autor", "Imagen"); 
+
             using (var dbContexto = DataContextGenerator.Generate())
             {
                 dbContexto.Medias.Add(entidadUnica);
@@ -62,7 +63,7 @@ namespace StreamingTestUnitarios
         [Fact]
         public void GetVideosPorIdConContexto1ElemLoDevuelve()
         {
-            var entidadUnica = new MediaEntity { Autor = "Autor", Descripcion = "Descripcion", Nombre = "Nombre", Ruta = "Ruta", Tags = "Tags" };
+            var entidadUnica = new MediaEntity("Nombre", "Ruta", "Descripcion", "Autor", "Imagen");
 
             using (var dbContexto = DataContextGenerator.Generate())
             {

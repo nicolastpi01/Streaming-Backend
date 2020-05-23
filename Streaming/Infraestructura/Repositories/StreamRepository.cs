@@ -52,9 +52,9 @@ namespace Streaming.Infraestructura.Repositories
                            .Select(pair => pair.Autor);
             if (result.Count() > 0) return result.Take(1).ToListAsync();
 
-            result = GetMedias() /* revisar que sepa separar por comas los tags en las sugerencias oo crear otra tabla para los tags */
-                           .Where(pair => pair.Tags.ToLower().Contains(lower))
-                           .Select(pair => pair.Tags);
+            /*result = GetMedias()  revisar que sepa separar por comas los tags en las sugerencias oo crear otra tabla para los tags
+                           .Where(pair => pair.Tags.Contains(lower))
+                           .Select(pair => pair.Tags);*/
             if (result.Count() > 0) return result.Take(1).ToListAsync();
 
             result = GetMedias() /* revisar este ultimo, se puede hacer algo mejor */
@@ -71,7 +71,7 @@ namespace Streaming.Infraestructura.Repositories
         public Task<List<MediaEntity>> SearchVideos(string busqueda)
         {
             return GetMedias()
-                            .Where(pair => pair.Nombre.Contains(busqueda) || pair.Autor.Contains(busqueda) || pair.Descripcion.Contains(busqueda) || pair.Tags.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
+                            .Where(pair => pair.Nombre.Contains(busqueda) || pair.Autor.Contains(busqueda) || pair.Descripcion.Contains(busqueda) ) //|| pair.Tags.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
                             .ToListAsync();
         }
 
@@ -80,10 +80,17 @@ namespace Streaming.Infraestructura.Repositories
             return GetMedias().Count();
         }
 
-        public FileStreamResult GetFile(string path, ControllerBase controller)
+        public FileStreamResult GetFileById(string path, ControllerBase controller)
         {
             string pathBase = Path.GetFullPath("Streaming");
             var fileStream = System.IO.File.Open(pathBase + path, FileMode.Open);
+            return controller.File(fileStream, "application/octet-stream");
+        }
+        public FileStreamResult GetImagenById(string fileId, ControllerBase controller)
+        {
+            var ruta = getMediaById(fileId).Imagen;
+            string path = Path.GetFullPath(ruta);
+            var fileStream = System.IO.File.Open(path, FileMode.Open);
             return controller.File(fileStream, "application/octet-stream");
         }
 

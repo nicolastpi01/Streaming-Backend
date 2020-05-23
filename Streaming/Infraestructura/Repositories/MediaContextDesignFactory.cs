@@ -8,7 +8,7 @@ namespace Streaming.Infraestructura.Repositories
         public MediaContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<MediaContext>()
-           .UseMySql("server = localhost; user id = root; password=dinocrisis; persistsecurityinfo = True; database = mysql; allowuservariables = True");
+           .UseMySql("server = localhost; user id = root; password=QLN*t~6gj=9hz-XU; persistsecurityinfo = True; database = TIP_STREAMING; allowuservariables = True");
             return new MediaContext(optionsBuilder.Options);
         }
     }
