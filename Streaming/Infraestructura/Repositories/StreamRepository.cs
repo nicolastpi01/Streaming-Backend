@@ -25,7 +25,6 @@ namespace Streaming.Infraestructura.Repositories
         {
             return GetMedias()
                     .Where(media => media.Id.ToString().Equals(Id))
-                    //.Select(media => media.Ruta)
                     .Single();
         }
 
@@ -52,27 +51,25 @@ namespace Streaming.Infraestructura.Repositories
                            .Select(pair => pair.Autor);
             if (result.Count() > 0) return result.Take(1).ToListAsync();
 
-            /*result = GetMedias()  revisar que sepa separar por comas los tags en las sugerencias oo crear otra tabla para los tags
-                           .Where(pair => pair.Tags.Contains(lower))
-                           .Select(pair => pair.Tags);*/
+            result = GetTags() // Retorna un tag que coincide con la busqueda, tocar la busqueda al apretar el boton para que tenga en cuenta los tags 
+                           .Where(pair => pair.Nombre.Contains(lower))
+                           .Select(pair => pair.Nombre);
+
             if (result.Count() > 0) return result.Take(1).ToListAsync();
+
 
             result = GetMedias() /* revisar este ultimo, se puede hacer algo mejor */
                    .Where(pair => pair.Descripcion.ToLower().Contains(lower))
-                   .Select(pair => pair.Descripcion);
+                   .Select(pair => pair.Nombre);
             return result.Take(1).ToListAsync();
 
-            /*
-             * return 
-                    .Select(pair => pair.Nombre)
-                    .Where(pair => pair.Contains(sugerencia)).Take(10).ToListAsync();*/
         }
 
         public Task<List<MediaEntity>> SearchVideos(string busqueda)
         {
             return GetMedias()
-                            .Where(pair => pair.Nombre.Contains(busqueda) || pair.Autor.Contains(busqueda) || pair.Descripcion.Contains(busqueda) ) //|| pair.Tags.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
-                            .ToListAsync();
+                .Where(pair => pair.Nombre.Contains(busqueda) || pair.Autor.Contains(busqueda) || pair.Descripcion.Contains(busqueda) )//|| pair.Tags.Contains(busqueda)) // solo busca por nombre, deberia buscar por mas cosas. (categoria, popularidad, etc)
+                .ToListAsync();
         }
 
         public int GetTotalVideos()
@@ -80,10 +77,12 @@ namespace Streaming.Infraestructura.Repositories
             return GetMedias().Count();
         }
 
-        public FileStreamResult GetFileById(string path, ControllerBase controller)
+        //public FileStreamResult GetFileById(string path, ControllerBase controller)
+        public FileStreamResult GetFileById(string fileId, ControllerBase controller)
         {
-            string pathBase = Path.GetFullPath("Streaming");
-            var fileStream = System.IO.File.Open(pathBase + path, FileMode.Open);
+            var ruta = getMediaById(fileId).Ruta;
+            string path = Path.GetFullPath(ruta);
+            var fileStream = System.IO.File.Open(path, FileMode.Open);
             return controller.File(fileStream, "application/octet-stream");
         }
         public FileStreamResult GetImagenById(string fileId, ControllerBase controller)
@@ -94,9 +93,15 @@ namespace Streaming.Infraestructura.Repositories
             return controller.File(fileStream, "application/octet-stream");
         }
 
+
         private DbSet<MediaEntity> GetMedias()
         {
             return ((MediaContext)_context).Medias;
+        }
+
+        private DbSet<TagEntity> GetTags()
+        {
+            return ((MediaContext)_context).Tags;
         }
     }    
 }

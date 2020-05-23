@@ -83,7 +83,7 @@ namespace StreamingTestUnitarios
         {
             var testingDirec = Directory.GetParent(System.IO.Directory.GetCurrentDirectory());
             string solutionDirec = testingDirec.Parent.Parent.Parent.FullName;
-            string directorio = Path.Combine(solutionDirec, "Streaming\\Movies\\");
+            string directorio = Path.Combine(solutionDirec, "Streaming\\StreamingMovies\\");
             return directorio;
         }
         [Fact]
@@ -104,7 +104,7 @@ namespace StreamingTestUnitarios
             try
             {
                 var mockEntity = Mock.Of<MediaEntity>(obj =>
-                    obj.Ruta == "Streaming\\Movies\\1280.mp4"
+                    obj.Ruta == "Streaming\\StreamingMovies\\1280.mp4"
                 );
                 var Repo = new Mock<IStreamRepository>();
                 var controlador = new VideoController(Repo.Object);

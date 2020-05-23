@@ -48,6 +48,7 @@ namespace Streaming
             //services.AddDbContext<MediaContext>();
             services.AddScoped<DbContext, MediaContext>();
             services.AddTransient<IStreamRepository, StreamRepository>();
+            services.AddTransient<ITagRepository, TagRepository>();
             //ConfigureAuth(services);
             services.AddControllers();
             services.AddMvc();

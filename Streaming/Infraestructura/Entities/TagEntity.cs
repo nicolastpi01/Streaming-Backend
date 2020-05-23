@@ -7,8 +7,8 @@ namespace Streaming.Infraestructura.Entities
 {
     public class TagEntity : Entity
     {
-        //public int IdMedia { get; private set; }
-        //public MediaEntity Media { get; private set; }
+        public int IdMedia { get; private set; }
+        public MediaEntity Media { get; private set; }
         public string Nombre { get; set; }
 
 
@@ -16,13 +16,12 @@ namespace Streaming.Infraestructura.Entities
         {
 
         }
-
-        public TagEntity(//int IdMedia,
-                          //MediaEntity Media,
+        public TagEntity(int IdMedia,
+                          MediaEntity Media,
                           string Nombre) : this()
         {
-            //this.IdMedia = IdMedia;
-            //this.Media = Media;
+            this.IdMedia = IdMedia;
+            this.Media = Media;
             this.Nombre = Nombre;
         }
 

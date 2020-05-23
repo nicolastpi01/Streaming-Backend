@@ -15,7 +15,6 @@ namespace Streaming.Infraestructura.Repositories.contracts
         Task<List<string>> GetSugerencias(string sugerencia);
         Task<List<MediaEntity>> SearchVideos(string busqueda);
         int GetTotalVideos();
-
         //FileStreamResult GetFile(string path, ControllerBase controller);
         FileStreamResult GetFileById(string fileId, ControllerBase videoController);
         FileStreamResult GetImagenById(string fileId, ControllerBase controller);

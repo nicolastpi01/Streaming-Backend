@@ -32,7 +32,11 @@ namespace Streaming.Controllers
         {
             try
             {
+<<<<<<< HEAD
                 return Repo.GetFileById(Repo.getMediaById(fileId).Ruta, this);
+=======
+                return Repo.GetFileById(fileId, this);
+>>>>>>> master
             }
             catch (InvalidOperationException)
             {
@@ -54,6 +58,7 @@ namespace Streaming.Controllers
             }
         }
 
+        
         [HttpGet]
         [Route("videos")]
         public async Task<PaginadoResponse> GetVideos(int page)
@@ -62,8 +67,22 @@ namespace Streaming.Controllers
 
             try
             {
+<<<<<<< HEAD
                 List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset);
                 var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, "pair.Tags", pair.Autor)).ToList() as List<VideosResult>;
+=======
+/*
+                var resultado = await Context.Medias
+                                    .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor))
+                                    .Skip(indice)
+                                    .Take(offset)
+                                    .ToListAsync();
+
+                return new PaginadoResponse(offset, total, resultado);
+*/
+                List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset); //abajo habia el constructor tenia: "pair.Tags,"
+                var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)).ToList() as List<VideosResult>;
+>>>>>>> master
                 return new PaginadoResponse(offset, Repo.GetTotalVideos(), resMap);
             }
             catch (Exception e)
@@ -71,9 +90,7 @@ namespace Streaming.Controllers
                 var i = e.Message;
             }
             return null;
-        }
-
-
+        } 
 
         //La busqueda de videos a partir de una busqueda string. Requiere paginado
         [HttpGet]
@@ -81,9 +98,16 @@ namespace Streaming.Controllers
         public async Task<IEnumerable<VideosResult>> getSearchVideos(string busqueda)
         {
             return (await Repo.SearchVideos(busqueda))
+<<<<<<< HEAD
                 .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, "pair.Tags", pair.Autor));
+=======
+                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)); // pair.Tags,
+>>>>>>> master
         }
 
+
+
+        
         [HttpGet]
         [Route("sugerencias")]
         public Task<List<string>> GetSugerencias(string sugerencia) // las sugerencias para una posible busqueda
@@ -98,16 +122,16 @@ namespace Streaming.Controllers
         public string indice { get; set; }
         public string nombre { get; set; }
         public string descripcion { get; set; }
-        public string tags { get; set; }
+        //public List<TagEntity> tags { get; set; }
         public string autor { get; set; }
         //public string duracion { get; set; }
 
-        public VideosResult(string indice, string nombre, string descripcion, string tags, string autor)
+        public VideosResult(string indice, string nombre, string descripcion, string autor)
         {
             this.indice = indice;
             this.nombre = nombre;
             this.descripcion = descripcion;
-            this.tags = tags;
+            //this.tags = tags;
             this.autor = autor;
         }
     }
