@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace Streaming.Infraestructura.Repositories
 {
@@ -7,8 +9,14 @@ namespace Streaming.Infraestructura.Repositories
     {
         public MediaContext CreateDbContext(string[] args)
         {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
             var optionsBuilder = new DbContextOptionsBuilder<MediaContext>()
-           .UseMySql("server = localhost; user id = root; password=QLN*t~6gj=9hz-XU; persistsecurityinfo = True; database = TIP_STREAMING; allowuservariables = True");
+                .UseMySql(configuration["ConexionMySql"]);
+
             return new MediaContext(optionsBuilder.Options);
         }
     }
