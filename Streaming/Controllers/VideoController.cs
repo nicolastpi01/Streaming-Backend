@@ -32,11 +32,8 @@ namespace Streaming.Controllers
         {
             try
             {
-<<<<<<< HEAD
-                return Repo.GetFileById(Repo.getMediaById(fileId).Ruta, this);
-=======
+                //return Repo.GetFileById(Repo.getMediaById(fileId).Ruta, this);
                 return Repo.GetFileById(fileId, this);
->>>>>>> master
             }
             catch (InvalidOperationException)
             {
@@ -67,22 +64,8 @@ namespace Streaming.Controllers
 
             try
             {
-<<<<<<< HEAD
                 List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset);
-                var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, "pair.Tags", pair.Autor)).ToList() as List<VideosResult>;
-=======
-/*
-                var resultado = await Context.Medias
-                                    .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor))
-                                    .Skip(indice)
-                                    .Take(offset)
-                                    .ToListAsync();
-
-                return new PaginadoResponse(offset, total, resultado);
-*/
-                List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset); //abajo habia el constructor tenia: "pair.Tags,"
                 var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)).ToList() as List<VideosResult>;
->>>>>>> master
                 return new PaginadoResponse(offset, Repo.GetTotalVideos(), resMap);
             }
             catch (Exception e)
@@ -98,11 +81,7 @@ namespace Streaming.Controllers
         public async Task<IEnumerable<VideosResult>> getSearchVideos(string busqueda)
         {
             return (await Repo.SearchVideos(busqueda))
-<<<<<<< HEAD
-                .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, "pair.Tags", pair.Autor));
-=======
                 .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)); // pair.Tags,
->>>>>>> master
         }
 
 

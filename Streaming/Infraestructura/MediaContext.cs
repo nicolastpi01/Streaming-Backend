@@ -21,7 +21,7 @@ namespace Streaming.Infraestructura
             //quisa reviente porque no va aca!!!
             modelBuilder.Entity<MediaEntity>(entity =>
             {
-                entity.ToTable("Media", DEFAULT_SCHEMA);
+                entity.ToTable("Media");
                 entity.HasKey(_ => _.Id);
                 entity.Property(_ => _.Nombre).IsRequired();
                 entity.Property(_ => _.Ruta).IsRequired();
@@ -33,7 +33,7 @@ namespace Streaming.Infraestructura
 
             modelBuilder.Entity<TagEntity>(entity =>
             {
-                entity.ToTable("Tag", DEFAULT_SCHEMA);
+                entity.ToTable("Tag");
                 entity.HasKey(_ => _.Id);
                 entity.Property(_ => _.Nombre).IsRequired();
                 /*entity.HasOne(t => t.Media)
