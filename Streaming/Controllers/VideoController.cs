@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Streaming.Infraestructura.Entities;
 using Streaming.Infraestructura.Repositories.contracts;
 using Microsoft.AspNetCore.Routing;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace Streaming.Controllers
 {
@@ -44,6 +44,7 @@ namespace Streaming.Controllers
         
         [HttpGet]
         [Route("videos")]
+        [Authorize]
         public async Task<PaginadoResponse> GetVideos(int page)
         {
             var indice = page * offset;
