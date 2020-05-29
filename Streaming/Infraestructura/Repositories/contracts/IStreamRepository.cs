@@ -18,5 +18,6 @@ namespace Streaming.Infraestructura.Repositories.contracts
         //FileStreamResult GetFile(string path, ControllerBase controller);
         FileStreamResult GetFileById(string fileId, ControllerBase videoController);
         FileStreamResult GetImagenById(string fileId, ControllerBase controller);
+        Task<ActionResult> SaveVideo(FileContentResult archivo, string name, VideoController videoController);
     }
 }

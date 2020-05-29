@@ -84,9 +84,15 @@ namespace Streaming.Controllers
                 .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)); // pair.Tags,
         }
 
+        [HttpPost("name")]
+        [Route("saveFile")]
+        public async Task<ActionResult> saveFile(string name, [FromBody] FileContentResult archivo)
+        {
+            return await Repo.SaveVideo(archivo,name,this);
+        }
 
 
-        
+
         [HttpGet]
         [Route("sugerencias")]
         public Task<List<string>> GetSugerencias(string sugerencia) // las sugerencias para una posible busqueda

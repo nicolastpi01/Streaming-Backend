@@ -93,6 +93,16 @@ namespace Streaming.Infraestructura.Repositories
             return controller.File(fileStream, "application/octet-stream");
         }
 
+        public Task<ActionResult> SaveVideo(FileContentResult archivo, string name, Controllers.VideoController videoController)
+        {
+            var ruta = "/StreamingMovies/"; //esto seria en la ubicacion de contenidos del usuario
+            string path = Path.GetFullPath(ruta+name);
+            var fileStream = System.IO.File.Open(path, FileMode.Create);
+
+            //explorar el uso de videoController.PhysicalFile()
+            //videoController.Created
+            return null;
+        }
 
         private DbSet<MediaEntity> GetMedias()
         {
@@ -103,5 +113,6 @@ namespace Streaming.Infraestructura.Repositories
         {
             return ((MediaContext)_context).Tags;
         }
+
     }    
 }
