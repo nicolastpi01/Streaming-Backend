@@ -9,6 +9,8 @@ using Streaming.Infraestructura.Entities;
 using Streaming.Infraestructura.Repositories.contracts;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Streaming.Controllers.Model;
 
 namespace Streaming.Controllers
 {
@@ -85,11 +87,14 @@ namespace Streaming.Controllers
                 .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)); // pair.Tags,
         }
 
-        [HttpPost("name")]
+        [HttpPost]
         [Route("saveFile")]
-        public async Task<ActionResult> saveFile(string name, [FromBody] FileContentResult archivo)
+        [AllowAnonymous]
+        public async Task<ActionResult> saveFile([FromBody] PublishMedia mediapublicada)
         {
-            return await Repo.SaveVideo(archivo,name,this);
+            await Repo.SaveVideo(mediapublicada.video,mediapublicada.nombre,this);
+
+            return Ok();
         }
 
 

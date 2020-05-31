@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Streaming.Infraestructura.Entities;
 using Streaming.Infraestructura.Repositories.contracts;
@@ -93,15 +94,24 @@ namespace Streaming.Infraestructura.Repositories
             return controller.File(fileStream, "application/octet-stream");
         }
 
-        public Task<ActionResult> SaveVideo(FileContentResult archivo, string name, Controllers.VideoController videoController)
+        public Task SaveVideo(IFormFile archivo, string name, Controllers.VideoController videoController)
         {
             var ruta = "/StreamingMovies/"; //esto seria en la ubicacion de contenidos del usuario
-            string path = Path.GetFullPath(ruta+name);
-            var fileStream = System.IO.File.Open(path, FileMode.Create);
+            
+            if (archivo.Length > 0)
+            {
+                var filePath = Path.GetFullPath(ruta + name);  //Path.GetTempFileName();
 
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    return archivo.CopyToAsync(stream);
+                }
+            }
+            else
+                return null;
             //explorar el uso de videoController.PhysicalFile()
             //videoController.Created
-            return null;
+
         }
 
         private DbSet<MediaEntity> GetMedias()

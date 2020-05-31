@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Streaming.Controllers;
 using Streaming.Infraestructura.Entities;
@@ -18,6 +19,6 @@ namespace Streaming.Infraestructura.Repositories.contracts
         //FileStreamResult GetFile(string path, ControllerBase controller);
         FileStreamResult GetFileById(string fileId, ControllerBase videoController);
         FileStreamResult GetImagenById(string fileId, ControllerBase controller);
-        Task<ActionResult> SaveVideo(FileContentResult archivo, string name, VideoController videoController);
+        Task SaveVideo(IFormFile archivo, string name, VideoController videoController);
     }
 }
