@@ -107,7 +107,7 @@ namespace Streaming.Infraestructura.Repositories
                 var media = new MediaEntity(mediapublicada.nombre, CrearRuta(mediapublicada.nombre,mediapublicada.video.FileName), "Una descripcion", "NiocolasTsk", CrearRuta(mediapublicada.nombre, mediapublicada.imagen.FileName));
                 GetMedias().Add(media);
                 _context.SaveChanges();
-            });
+            }).Wait();
         }
 
         public async Task<string> SaveVideo(IFormFile archivo, string name)
