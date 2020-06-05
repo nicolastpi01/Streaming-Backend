@@ -14,6 +14,7 @@ namespace Streaming.Infraestructura.Entities
         public string Nombre { get; set; }
         public string Ruta { get; set; }
         public string Descripcion { get; set; }
+        public string Imagen { get; set; }
         //public string Tags { get; set; } // Example -> sports, movies, music, others, etc
 
         //public List<TagEntity> Tags { get; set; }
@@ -44,12 +45,14 @@ namespace Streaming.Infraestructura.Entities
         public MediaEntity(string Nombre,
                   string Ruta,
                   string Descripcion,
-                  string Autor) : this()
+                  string Autor,
+                  string Imagen) : this()
         {
             this.Nombre = Nombre;
             this.Ruta = Ruta;
             this.Descripcion = Descripcion;
             this.Autor = Autor;
+            this.Imagen = Imagen;
         }
 
         public void AddTag(int IdMedia, MediaEntity Media, string Nombre)

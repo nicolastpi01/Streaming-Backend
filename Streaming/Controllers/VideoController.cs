@@ -9,6 +9,8 @@ using Streaming.Infraestructura.Entities;
 using Streaming.Infraestructura.Repositories.contracts;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Streaming.Controllers.Model;
 
 namespace Streaming.Controllers
 {
@@ -32,6 +34,7 @@ namespace Streaming.Controllers
         {
             try
             {
+                //return Repo.GetFileById(Repo.getMediaById(fileId).Ruta, this);
                 return Repo.GetFileById(fileId, this);
             }
             catch (InvalidOperationException)
@@ -40,6 +43,19 @@ namespace Streaming.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("getImagenById")]
+        public ActionResult getImagenById(string fileId)
+        {
+            try
+            {
+                return Repo.GetImagenById(fileId, this);
+            }
+            catch (InvalidOperationException)
+            {
+                return new EmptyResult();
+            }
+        }
 
         
         [HttpGet]
@@ -51,16 +67,7 @@ namespace Streaming.Controllers
 
             try
             {
-/*
-                var resultado = await Context.Medias
-                                    .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor))
-                                    .Skip(indice)
-                                    .Take(offset)
-                                    .ToListAsync();
-
-                return new PaginadoResponse(offset, total, resultado);
-*/
-                List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset); //abajo habia el constructor tenia: "pair.Tags,"
+                List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset);
                 var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)).ToList() as List<VideosResult>;
                 return new PaginadoResponse(offset, Repo.GetTotalVideos(), resMap);
             }
@@ -80,9 +87,15 @@ namespace Streaming.Controllers
                 .Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)); // pair.Tags,
         }
 
+        [HttpPost]
+        [Route("saveFile")]
+        [AllowAnonymous]
+        public async Task<ActionResult> saveFile([FromForm] PublishMedia mediapublicada)
+        {
+            Repo.SaveMedia(mediapublicada);
+            return Ok(new { Status = "grabado"});
+        }
 
-
-        
         [HttpGet]
         [Route("sugerencias")]
         public Task<List<string>> GetSugerencias(string sugerencia) // las sugerencias para una posible busqueda

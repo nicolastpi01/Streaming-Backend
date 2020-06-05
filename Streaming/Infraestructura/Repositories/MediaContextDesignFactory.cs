@@ -16,6 +16,7 @@ namespace Streaming.Infraestructura.Repositories
 
             var optionsBuilder = new DbContextOptionsBuilder<MediaContext>()
                 .UseMySql(configuration["ConexionMySql"]);
+
             return new MediaContext(optionsBuilder.Options);
         }
     }

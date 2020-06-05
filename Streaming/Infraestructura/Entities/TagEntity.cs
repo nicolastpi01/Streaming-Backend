@@ -16,7 +16,6 @@ namespace Streaming.Infraestructura.Entities
         {
 
         }
-
         public TagEntity(int IdMedia,
                           MediaEntity Media,
                           string Nombre) : this()
