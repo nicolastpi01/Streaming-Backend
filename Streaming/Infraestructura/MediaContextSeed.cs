@@ -23,12 +23,27 @@ namespace Streaming.Infraestructura
                 if (!context.Medias.Any())
                 {
 
-                    MediaEntity m1 = new MediaEntity("1280", "/StreamingMovies/1280.mp4", "Una descripcion", "NiocolasTsk");
-                    MediaEntity m2 = new MediaEntity("sampleVideo1", "/StreamingMovies/sampleVideo_1280x720_10mb.mp4", "Una descripcion", "Mamushka01");
-                    MediaEntity m3 = new MediaEntity("sampleVideo2", "/StreamingMovies/sampleVideo_1280x720_5mb.mp4", "Una descripcion", "PireSusuke");
-                    MediaEntity m4 = new MediaEntity("small", "/StreamingMovies/small.mp4", "Una descripcion", "OtooOCTAVIUS");
-                    MediaEntity m5 = new MediaEntity("dolbycanyon", "/StreamingMovies/dolbycanyon.mp4", "Una descripcion", "DrossRotzank");
-                    MediaEntity m6 = new MediaEntity("star_trails", "/StreamingMovies/star_trails.mp4", "Una descripcion", "KingsAndGenerals");
+                    MediaEntity m1 = new MediaEntity("1280", "/StreamingMovies/1280.mp4", "Una descripcion", "Nikolai Luzhin");
+                    MediaEntity m2 = new MediaEntity("sampleVideo1", "/StreamingMovies/sampleVideo_1280x720_10mb.mp4", "Una descripcion", "Tom Hagen");
+                    MediaEntity m3 = new MediaEntity("sampleVideo2", "/StreamingMovies/sampleVideo_1280x720_5mb.mp4", "Una descripcion", "Vincent Corleone");
+                    MediaEntity m4 = new MediaEntity("small", "/StreamingMovies/small.mp4", "Una descripcion", "Proposition Joe");
+                    MediaEntity m5 = new MediaEntity("dolbycanyon", "/StreamingMovies/dolbycanyon.mp4", "Una descripcion", "TonySoprano");
+                    MediaEntity m6 = new MediaEntity("star_trails", "/StreamingMovies/star_trails.mp4", "Una descripcion", "SonnyCorleone");
+
+                    // NUEVOS
+                    MediaEntity m7 = new MediaEntity("Panasonic_HDC_TM_700_P_50i", "/StreamingMovies/Panasonic_HDC_TM_700_P_50i.mp4", "Una descripcion", "MarloStanfield");
+                    MediaEntity m8 = new MediaEntity("page18-movie-4", "/StreamingMovies/page18-movie-4.mp4", "Una descripcion", "Avon Barksdale"); 
+                    MediaEntity m9 = new MediaEntity("grb_2", "/StreamingMovies/grb_2.mp4", "Una descripcion", "Spawn666");
+                    MediaEntity m10 = new MediaEntity("metaxas-keller-Bell", "/StreamingMovies/metaxas-keller-Bell.mp4", "Una descripcion", "DrStrange");
+                    MediaEntity m11 = new MediaEntity("TRA3106", "/StreamingMovies/TRA3106.mp4", "Una descripcion", "Stringer Bell");
+                    MediaEntity m12 = new MediaEntity("lion-sample", "/StreamingMovies/lion-sample.mp4", "Una descripcion", "CorleoneVito");
+                    MediaEntity m13 = new MediaEntity("jellyfish-25-mbps-hd-hevc", "/StreamingMovies/jellyfish-25-mbps-hd-hevc.mp4", "Una descripcion", "MontanaTony");
+                    MediaEntity m14 = new MediaEntity("P6090053", "/StreamingMovies/P6090053.mp4", "Una descripcion", "Don Eraldo");
+
+                    MediaEntity m15 = new MediaEntity("SampleVideos3", "/StreamingMovies/SampleVideos3.mp4", "Una descripcion", "Don Eraldo");
+                    MediaEntity m16 = new MediaEntity("SampleVideos4", "/StreamingMovies/SampleVideos4.mp4", "Una descripcion", "Don Eraldo");
+                    MediaEntity m17 = new MediaEntity("SampleVideos5", "/StreamingMovies/SampleVideos5.mp4", "Una descripcion", "Don Eraldo");
+                    MediaEntity m18 = new MediaEntity("SampleVideos6", "/StreamingMovies/SampleVideos6.mp4", "Una descripcion", "Don Eraldo");
 
 
                     m1.AddTag(m1.Id, m1, "sports");
@@ -44,6 +59,18 @@ namespace Streaming.Infraestructura
                     context.Medias.Add(m4);
                     context.Medias.Add(m5);
                     context.Medias.Add(m6);
+                    context.Medias.Add(m7);
+                    context.Medias.Add(m8);
+                    context.Medias.Add(m9);
+                    context.Medias.Add(m10);
+                    context.Medias.Add(m11);
+                    context.Medias.Add(m12);
+                    context.Medias.Add(m13);
+                    context.Medias.Add(m14);
+                    context.Medias.Add(m15);
+                    context.Medias.Add(m16);
+                    context.Medias.Add(m17);
+                    context.Medias.Add(m18);
                 }
                 context.SaveChanges();
             }

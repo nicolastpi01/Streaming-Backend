@@ -23,7 +23,7 @@ namespace Streaming.Controllers
         public VideoController(IStreamRepository repo)
         {
             Repo = repo;
-            offset = 10;
+            offset = 5;
         }
 
         [HttpGet]
@@ -44,7 +44,7 @@ namespace Streaming.Controllers
         
         [HttpGet]
         [Route("videos")]
-        [Authorize]
+        //[Authorize]
         public async Task<PaginadoResponse> GetVideos(int page)
         {
             var indice = page * offset;
