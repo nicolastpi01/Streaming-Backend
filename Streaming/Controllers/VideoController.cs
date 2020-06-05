@@ -90,14 +90,11 @@ namespace Streaming.Controllers
         [HttpPost]
         [Route("saveFile")]
         [AllowAnonymous]
-        public async Task<ActionResult> saveFile([FromBody] PublishMedia mediapublicada)
+        public async Task<ActionResult> saveFile([FromForm] PublishMedia mediapublicada)
         {
-            await Repo.SaveVideo(mediapublicada.video,mediapublicada.nombre,this);
-
-            return Ok();
+            Repo.SaveMedia(mediapublicada);
+            return Ok(new { Status = "grabado"});
         }
-
-
 
         [HttpGet]
         [Route("sugerencias")]
