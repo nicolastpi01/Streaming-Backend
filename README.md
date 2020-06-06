@@ -5,7 +5,6 @@
 
 
 
-
-
+<p>Para mas informacion, ir a la <a href="https://github.com/nicolastpi01/Streaming-Documentacion.git" title="Repositorio de la Documentacion"> documentacion</a></p>
 
 
