@@ -18,6 +18,9 @@ using Streaming.Infraestructura.Repositories.contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Streaming.Controllers.Model;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http;
 
 namespace StreamingTestUnitarios
 {
@@ -175,7 +178,35 @@ namespace StreamingTestUnitarios
             result.Result.ShouldBeSameAs(LasSugerencias);
         }
 
-    internal class PropertyTypeOmitter : AutoFixture.Kernel.ISpecimenBuilder
+
+        [Fact]
+        public async void TestSaveFileSinArchivosPublicadosLanzaExcepcion()
+        {
+            PublishMedia publish = new PublishMedia { nombre = It.IsAny<string>(), imagen=null, video=null};
+            var Repo = new Mock<IStreamRepository>();
+            Repo.Setup(obj => obj.SaveMedia(publish)).Throws<NullReferenceException>();
+            var controlador = new VideoController(Repo.Object);
+            try { await controlador.saveFile(publish); Assert.True(false); }
+            catch { Assert.True(true); }    
+        }
+
+        [Fact]
+        public async void TestSaveFileConArchivosPublicadosDaOkConMensaje()
+        {
+            PublishMedia publish = new PublishMedia { nombre = It.IsAny<string>(), imagen = It.IsAny<IFormFile>(), video = It.IsAny<IFormFile>() };
+            var Repo = new Mock<IStreamRepository>();
+            
+            var controlador = new VideoController(Repo.Object);
+            
+            var result = await controlador.saveFile(publish);
+            result.ShouldNotBeNull();
+            Repo.Setup(obj => obj.SaveMedia(publish)).Verifiable();
+        }
+
+
+
+
+        internal class PropertyTypeOmitter : AutoFixture.Kernel.ISpecimenBuilder
     {
         private readonly Type type;
 
