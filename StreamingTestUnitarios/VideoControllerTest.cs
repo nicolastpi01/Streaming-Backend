@@ -72,18 +72,17 @@ namespace StreamingTestUnitarios
         public void TestGetVideoPorIdQueNoExisteDaResultadoVacio()
         {
             var Repo = new Mock<IStreamRepository>();
-            Repo.Setup(obj => obj.getMediaById(It.IsAny<string>())).Throws<InvalidOperationException>();
             var controlador = new VideoController(Repo.Object);
-
+            Repo.Setup(obj => obj.GetFileById(It.IsAny<string>(),controlador)).Throws<InvalidOperationException>();
+            
             var result = controlador.getFileById(It.IsAny<string>());
             result.ShouldBeOfType<EmptyResult>();
         }
 
         private string buscarpelicula()
         {
-            var testingDirec = Directory.GetParent(System.IO.Directory.GetCurrentDirectory());
-            string solutionDirec = testingDirec.Parent.Parent.Parent.FullName;
-            string directorio = Path.Combine(solutionDirec, "Streaming\\StreamingMovies\\");
+            var testingDirec = Directory.GetDirectoryRoot(System.IO.Directory.GetCurrentDirectory());
+            string directorio = testingDirec+"StreamingMovies\\";//Path.Combine(solutionDirec, "Streaming\\StreamingMovies\\");
             return directorio;
         }
         [Fact]
@@ -91,16 +90,7 @@ namespace StreamingTestUnitarios
         {
             string ruta = buscarpelicula() + "1280.mp4";
             var fileStream = File.Open( ruta, System.IO.FileMode.Open);
-            /*
-            var fixture = new Fixture();
-            fixture.Customizations.Add( new PropertyTypeOmitter(typeof(FileStreamResult)));
-            fixture //.Customize(new FileStreamResultCustom())
-                   .Customize(new AutoMoqCustomization())
-                   .Behaviors.Add(new OmitOnRecursionBehavior());
-            //var fileStream = fixture.Create<FileStreamResult>() as FileStreamResult; //Lanza excepcion:
-            //AutoFixture.ObjectCreationExceptionWithPath : AutoFixture was unable to create an instance from Microsoft.AspNetCore.Mvc.FileStreamResult because creation unexpectedly failed with exception.
-            //Please refer to the inner exception to investigate the root cause of the failure.
-            */
+
             try
             {
                 var mockEntity = Mock.Of<MediaEntity>(obj =>
