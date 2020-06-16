@@ -18,6 +18,9 @@ using Streaming.Infraestructura.Repositories.contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Streaming.Controllers.Model;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http;
 
 namespace StreamingTestUnitarios
 {
@@ -72,18 +75,17 @@ namespace StreamingTestUnitarios
         public void TestGetVideoPorIdQueNoExisteDaResultadoVacio()
         {
             var Repo = new Mock<IStreamRepository>();
-            Repo.Setup(obj => obj.getMediaById(It.IsAny<string>())).Throws<InvalidOperationException>();
             var controlador = new VideoController(Repo.Object);
-
+            Repo.Setup(obj => obj.GetFileById(It.IsAny<string>(),controlador)).Throws<InvalidOperationException>();
+            
             var result = controlador.getFileById(It.IsAny<string>());
             result.ShouldBeOfType<EmptyResult>();
         }
 
         private string buscarpelicula()
         {
-            var testingDirec = Directory.GetParent(System.IO.Directory.GetCurrentDirectory());
-            string solutionDirec = testingDirec.Parent.Parent.Parent.FullName;
-            string directorio = Path.Combine(solutionDirec, "Streaming\\StreamingMovies\\");
+            var testingDirec = Directory.GetDirectoryRoot(System.IO.Directory.GetCurrentDirectory());
+            string directorio = testingDirec+"StreamingMovies\\";//Path.Combine(solutionDirec, "Streaming\\StreamingMovies\\");
             return directorio;
         }
         [Fact]
@@ -91,16 +93,7 @@ namespace StreamingTestUnitarios
         {
             string ruta = buscarpelicula() + "1280.mp4";
             var fileStream = File.Open( ruta, System.IO.FileMode.Open);
-            /*
-            var fixture = new Fixture();
-            fixture.Customizations.Add( new PropertyTypeOmitter(typeof(FileStreamResult)));
-            fixture //.Customize(new FileStreamResultCustom())
-                   .Customize(new AutoMoqCustomization())
-                   .Behaviors.Add(new OmitOnRecursionBehavior());
-            //var fileStream = fixture.Create<FileStreamResult>() as FileStreamResult; //Lanza excepcion:
-            //AutoFixture.ObjectCreationExceptionWithPath : AutoFixture was unable to create an instance from Microsoft.AspNetCore.Mvc.FileStreamResult because creation unexpectedly failed with exception.
-            //Please refer to the inner exception to investigate the root cause of the failure.
-            */
+
             try
             {
                 var mockEntity = Mock.Of<MediaEntity>(obj =>
@@ -185,7 +178,35 @@ namespace StreamingTestUnitarios
             result.Result.ShouldBeSameAs(LasSugerencias);
         }
 
-    internal class PropertyTypeOmitter : AutoFixture.Kernel.ISpecimenBuilder
+
+        [Fact]
+        public async void TestSaveFileSinArchivosPublicadosLanzaExcepcion()
+        {
+            PublishMedia publish = new PublishMedia { nombre = It.IsAny<string>(), imagen=null, video=null};
+            var Repo = new Mock<IStreamRepository>();
+            Repo.Setup(obj => obj.SaveMedia(publish)).Throws<NullReferenceException>();
+            var controlador = new VideoController(Repo.Object);
+            try { await controlador.saveFile(publish); Assert.True(false); }
+            catch { Assert.True(true); }    
+        }
+
+        [Fact]
+        public async void TestSaveFileConArchivosPublicadosDaOkConMensaje()
+        {
+            PublishMedia publish = new PublishMedia { nombre = It.IsAny<string>(), imagen = It.IsAny<IFormFile>(), video = It.IsAny<IFormFile>() };
+            var Repo = new Mock<IStreamRepository>();
+            
+            var controlador = new VideoController(Repo.Object);
+            
+            var result = await controlador.saveFile(publish);
+            result.ShouldNotBeNull();
+            Repo.Setup(obj => obj.SaveMedia(publish)).Verifiable();
+        }
+
+
+
+
+        internal class PropertyTypeOmitter : AutoFixture.Kernel.ISpecimenBuilder
     {
         private readonly Type type;
 
