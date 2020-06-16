@@ -28,7 +28,7 @@ namespace Streaming.Infraestructura
                 entity.Property(_ => _.Descripcion);
                 //entity.Property(_ => _.Tags);
                 entity.Property(_ => _.Autor);
-                entity.Property(_ => _.Imagen).IsRequired();
+                entity.Property(_ => _.Imagen);
             });
 
             modelBuilder.Entity<TagEntity>(entity =>

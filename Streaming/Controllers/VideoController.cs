@@ -25,7 +25,7 @@ namespace Streaming.Controllers
         public VideoController(IStreamRepository repo)
         {
             Repo = repo;
-            offset = 5;
+            offset = 8;
         }
 
         [HttpGet]

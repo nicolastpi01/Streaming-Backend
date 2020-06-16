@@ -55,6 +55,19 @@ namespace Streaming.Infraestructura.Entities
             this.Imagen = Imagen;
         }
 
+        public MediaEntity(string Nombre,
+                  string Ruta,
+                  string Descripcion,
+                  string Autor
+                  ) : this()
+        {
+            this.Nombre = Nombre;
+            this.Ruta = Ruta;
+            this.Descripcion = Descripcion;
+            this.Autor = Autor;
+           
+        }
+
         public void AddTag(int IdMedia, MediaEntity Media, string Nombre)
         {
             this._tags.Add(new TagEntity(IdMedia,

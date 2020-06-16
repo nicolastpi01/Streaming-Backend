@@ -79,6 +79,7 @@ namespace Streaming.Infraestructura.Repositories
             return GetMedias().Count();
         }
 
+
         //public FileStreamResult GetFileById(string path, ControllerBase controller)
         public FileStreamResult GetFileById(string fileId, ControllerBase controller)
         {

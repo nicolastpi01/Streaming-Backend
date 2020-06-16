@@ -23,7 +23,7 @@ namespace Streaming.Infraestructura
                 if (!context.Medias.Any())
                 {
 
-                    /*
+                    
                     MediaEntity m1 = new MediaEntity("1280", "/StreamingMovies/1280.mp4", "Una descripcion", "Nikolai Luzhin", "/StreamingMovies/EasternPromises.png");
                     MediaEntity m2 = new MediaEntity("sampleVideo1", "/StreamingMovies/sampleVideo_1280x720_10mb.mp4", "Una descripcion", "Tom Hagen", "/StreamingMovies/TomHagen.png");
                     MediaEntity m3 = new MediaEntity("sampleVideo2", "/StreamingMovies/sampleVideo_1280x720_5mb.mp4", "Una descripcion", "Vincent Corleone", "/StreamingMovies/VincentCorleone.png");
@@ -33,30 +33,23 @@ namespace Streaming.Infraestructura
 
                     // NUEVOS
                     
-                    MediaEntity m7 = new MediaEntity("Panasonic_HDC_TM_700_P_50i", "/StreamingMovies/Panasonic_HDC_TM_700_P_50i.mp4", "Una descripcion", "MarloStanfield");
-                    MediaEntity m8 = new MediaEntity("page18-movie-4", "/StreamingMovies/page18-movie-4.mp4", "Una descripcion", "Avon Barksdale"); 
+                    MediaEntity m7 = new MediaEntity("Panasonic_HDC_TM_700_P_50i", "/StreamingMovies/Panasonic_HDC_TM_700_P_50i.mp4", "Una descripcion", "Spawn666");
+                    MediaEntity m8 = new MediaEntity("page18-movie-4", "/StreamingMovies/page18-movie-4.mp4", "Una descripcion", "Spawn666"); 
                     MediaEntity m9 = new MediaEntity("grb_2", "/StreamingMovies/grb_2.mp4", "Una descripcion", "Spawn666");
-                    MediaEntity m10 = new MediaEntity("metaxas-keller-Bell", "/StreamingMovies/metaxas-keller-Bell.mp4", "Una descripcion", "DrStrange");
+                    MediaEntity m10 = new MediaEntity("metaxas-keller-Bell", "/StreamingMovies/metaxas-keller-Bell.mp4", "Una descripcion", "Spawn666");
                     MediaEntity m11 = new MediaEntity("TRA3106", "/StreamingMovies/TRA3106.mp4", "Una descripcion", "Stringer Bell");
                     MediaEntity m12 = new MediaEntity("lion-sample", "/StreamingMovies/lion-sample.mp4", "Una descripcion", "CorleoneVito");
-                    MediaEntity m13 = new MediaEntity("jellyfish-25-mbps-hd-hevc", "/StreamingMovies/jellyfish-25-mbps-hd-hevc.mp4", "Una descripcion", "MontanaTony");
+                    MediaEntity m13 = new MediaEntity("jellyfish-25-mbps-hd-hevc", "/StreamingMovies/jellyfish-25-mbps-hd-hevc.mp4", "Una descripcion", "Spawn666");
                     MediaEntity m14 = new MediaEntity("P6090053", "/StreamingMovies/P6090053.mp4", "Una descripcion", "Don Eraldo");
 
                     MediaEntity m15 = new MediaEntity("SampleVideos3", "/StreamingMovies/SampleVideos3.mp4", "Una descripcion", "Don Eraldo");
                     MediaEntity m16 = new MediaEntity("SampleVideos4", "/StreamingMovies/SampleVideos4.mp4", "Una descripcion", "Don Eraldo");
                     MediaEntity m17 = new MediaEntity("SampleVideos5", "/StreamingMovies/SampleVideos5.mp4", "Una descripcion", "Don Eraldo");
                     MediaEntity m18 = new MediaEntity("SampleVideos6", "/StreamingMovies/SampleVideos6.mp4", "Una descripcion", "Don Eraldo");
-                    */
+                    
 
 
-
-                    MediaEntity m1 = new MediaEntity("1280", "/StreamingMovies/1280.mp4", "Una descripcion", "NiocolasTsk", "/StreamingMovies/montaña.png");
-                    MediaEntity m2 = new MediaEntity("sampleVideo1", "/StreamingMovies/sampleVideo_1280x720_10mb.mp4", "Una descripcion", "Mamushka01", "/StreamingMovies/bigbunny1.png");
-                    MediaEntity m3 = new MediaEntity("sampleVideo2", "/StreamingMovies/sampleVideo_1280x720_5mb.mp4", "Una descripcion", "PireSusuke", "/StreamingMovies/bigbunny2.png");
-                    MediaEntity m4 = new MediaEntity("small", "/StreamingMovies/small.mp4", "Una descripcion", "OtooOCTAVIUS", "/StreamingMovies/experimento.png");
-                    MediaEntity m5 = new MediaEntity("dolbycanyon", "/StreamingMovies/dolbycanyon.mp4", "Una descripcion", "DrossRotzank" , "/StreamingMovies/bigbunny.png");
-                    MediaEntity m6 = new MediaEntity("star_trails", "/StreamingMovies/star_trails.mp4", "Una descripcion", "KingsAndGenerals", "/StreamingMovies/bigbunny.png");
-
+                    
 
 
                     m1.AddTag(m1.Id, m1, "sports");
@@ -73,7 +66,7 @@ namespace Streaming.Infraestructura
 
                     context.Medias.Add(m5);
                     context.Medias.Add(m6);
-                    /*
+                    
                     context.Medias.Add(m7);
                     context.Medias.Add(m8);
                     context.Medias.Add(m9);
@@ -86,7 +79,7 @@ namespace Streaming.Infraestructura
                     context.Medias.Add(m16);
                     context.Medias.Add(m17);
                     context.Medias.Add(m18);
-                    */
+                    
                 }
                 context.SaveChanges();
             }
