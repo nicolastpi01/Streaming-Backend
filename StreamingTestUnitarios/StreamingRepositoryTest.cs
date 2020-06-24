@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Moq;
@@ -81,6 +83,110 @@ namespace StreamingTestUnitarios
                 result.Tags.ShouldBeSameAs(entidadUnica.Tags);
             }
 
+        }
+
+        [Fact]
+        public async void TestGuardarAchivoQueNoEsAceptadoDevuelveStringNulo()
+        {
+            var fileMock = new Mock<IFormFile>();
+
+            var fileName = It.IsAny<string>();
+            var fileExtension = It.IsNotIn<string>( new List<string>{ ".mp4", ".png" });
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("BlockBinario");
+            writer.Flush();
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.FileName).Returns(fileName + fileExtension);
+            fileMock.Setup(_ => _.ContentType).Returns("");
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+
+            using (var dbContexto = DataContextGenerator.Generate())
+            {
+                var repo = new StreamRepository(dbContexto);
+                (await repo.SaveVideo(fileMock.Object,fileName)).ShouldBe("");
+            }
+        }
+
+        [Fact]
+        public async void TestGuardarAchivoQueEsAceptadoPeroEstaVacioDevuelveStringNulo()
+        {
+            var fileMock = new Mock<IFormFile>();
+
+            var fileName = It.IsAny<string>();
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            //Se omite el writer.Write
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.FileName).Returns(fileName + ".any");
+            fileMock.Setup(_ => _.Length).Returns(0);
+
+            using (var dbContexto = DataContextGenerator.Generate())
+            {
+                var repo = new StreamRepository(dbContexto);
+                fileMock.Setup(_ => _.ContentType).Returns("video");
+                (await repo.SaveVideo(fileMock.Object, fileName)).ShouldBe("");
+                fileMock.Setup(_ => _.ContentType).Returns("image");
+                (await repo.SaveVideo(fileMock.Object, fileName)).ShouldBe("");
+            }
+        }
+
+        [Fact]
+        public async void TestGuardarAchivoQueEsVideoDevuelveStringRuta()
+        {
+            var fileMock = new Mock<IFormFile>();
+
+            var fileName = "TestGuardarAchivoQueEsVideoDevuelveStringRuta";
+            var fileExtension = ".mp4";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("BlockBinario");
+            writer.Flush();
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.FileName).Returns(fileName + fileExtension);
+            fileMock.Setup(_ => _.ContentType).Returns("video");
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+
+            using (var dbContexto = DataContextGenerator.Generate())
+            {
+                var repo = new StreamRepository(dbContexto);
+                var result = (await repo.SaveVideo(fileMock.Object, fileName));
+                result.ShouldNotBe("");
+                result.EndsWith(fileName + fileExtension);
+                File.Exists(result).ShouldBeTrue();
+                File.Delete(result);
+            }
+        }
+
+        [Fact]
+        public async void TestGuardarAchivoQueEsImagenDevuelveStringRuta()
+        {
+            var fileMock = new Mock<IFormFile>();
+
+            var fileName = "TestGuardarAchivoQueEsImagenDevuelveStringRuta";
+            var fileExtension = ".png";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("BlockBinario");
+            writer.Flush();
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.FileName).Returns(fileName + fileExtension);
+            fileMock.Setup(_ => _.ContentType).Returns("image");
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+
+            using (var dbContexto = DataContextGenerator.Generate())
+            {
+                var repo = new StreamRepository(dbContexto);
+                var result = (await repo.SaveVideo(fileMock.Object, fileName));
+                result.ShouldNotBe("");
+                result.EndsWith(fileName + fileExtension);
+                File.Exists(result).ShouldBeTrue();
+                File.Delete(result);
+            }
         }
     }
 }
