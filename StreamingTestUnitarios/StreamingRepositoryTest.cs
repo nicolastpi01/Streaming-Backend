@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 using Moq;
 using Shouldly;
 using Streaming.Controllers;
+using Streaming.Controllers.Model;
 using Streaming.Infraestructura;
 using Streaming.Infraestructura.Entities;
 using Streaming.Infraestructura.Repositories;
@@ -186,6 +187,148 @@ namespace StreamingTestUnitarios
                 result.EndsWith(fileName + fileExtension);
                 File.Exists(result).ShouldBeTrue();
                 File.Delete(result);
+            }
+        }
+
+        [Fact]
+        public void TestSaveMediaVacioFalla()
+        {
+            PublishMedia publishMedia = new PublishMedia();
+            publishMedia.imagen = null;
+            publishMedia.video = null;
+            publishMedia.nombre = "";
+
+
+            using (var dbContexto = DataContextGenerator.Generate())
+            {
+                var repo = new StreamRepository(dbContexto);
+                var cantidadContenido = dbContexto.Medias.Count();
+                repo.SaveMedia(publishMedia);
+                dbContexto.Medias.Count().ShouldBe(cantidadContenido);
+            }
+        }
+
+        [Fact]
+        public void TestSaveMediaContenidoInvalidoFalla()
+        {
+            PublishMedia publishMedia = new PublishMedia();
+            publishMedia.nombre = "";
+
+            var fileMock = new Mock<IFormFile>();
+
+            var fileName = "TestSaveMediaContenidoInvalidoFalla";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("BlockBinario");
+            writer.Flush();
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+
+            using (var dbContexto = DataContextGenerator.Generate())
+            {
+                var repo = new StreamRepository(dbContexto);
+                var cantidadContenido = dbContexto.Medias.Count();
+
+                //Video
+                fileMock.Setup(_ => _.FileName).Returns(fileName + ".avi");
+                fileMock.Setup(_ => _.ContentType).Returns("video");
+                publishMedia.imagen = null;
+                publishMedia.video = fileMock.Object;
+                repo.SaveMedia(publishMedia);
+                dbContexto.Medias.Count().ShouldBe(cantidadContenido);
+
+                //Imagen
+                fileMock.Setup(_ => _.FileName).Returns(fileName + ".jpeg");
+                fileMock.Setup(_ => _.ContentType).Returns("image");
+                publishMedia.imagen = fileMock.Object;
+                publishMedia.video = null;
+                repo.SaveMedia(publishMedia);
+                dbContexto.Medias.Count().ShouldBe(cantidadContenido);
+            }
+        }
+
+        [Fact]
+        public void TestSaveMediaSoloUnContenidoCorrectoInvalidoFalla()
+        {
+            PublishMedia publishMedia = new PublishMedia();
+            publishMedia.nombre = "";
+
+            var fileMock = new Mock<IFormFile>();
+
+            var fileName = "TestSaveMediaSoloUnContenidoCorrectoInvalidoFalla";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("BlockBinario");
+            writer.Flush();
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+
+            using (var dbContexto = DataContextGenerator.Generate())
+            {
+                var repo = new StreamRepository(dbContexto);
+                var cantidadContenido = dbContexto.Medias.Count();
+
+                //Video
+                fileMock.Setup(_ => _.FileName).Returns(fileName + ".mp4");
+                fileMock.Setup(_ => _.ContentType).Returns("video");
+                publishMedia.imagen = null;
+                publishMedia.video = fileMock.Object;
+                repo.SaveMedia(publishMedia);
+                dbContexto.Medias.Count().ShouldBe(cantidadContenido);
+
+                //Imagen
+                fileMock.Setup(_ => _.FileName).Returns(fileName + ".png");
+                fileMock.Setup(_ => _.ContentType).Returns("image");
+                publishMedia.imagen = fileMock.Object;
+                publishMedia.video = null;
+                repo.SaveMedia(publishMedia);
+                dbContexto.Medias.Count().ShouldBe(cantidadContenido);
+            }
+        }
+
+        [Fact]
+        public void TestSaveMediaConContenidoCorrectoGrabaEnDBYDisco()
+        {
+            var video = new Mock<IFormFile>();
+            var imagen = new Mock<IFormFile>();
+
+            var fileName = "TestSaveMediaConContenidoCorrectoGrabaEnDBYDisco";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write("BlockBinario");
+            writer.Flush();
+            ms.Position = 0;
+            video.Setup(_ => _.OpenReadStream()).Returns(ms);
+            video.Setup(_ => _.Length).Returns(ms.Length);
+            video.Setup(_ => _.FileName).Returns(fileName + ".mp4");
+            video.Setup(_ => _.ContentType).Returns("video");
+
+            imagen.Setup(_ => _.OpenReadStream()).Returns(ms);
+            imagen.Setup(_ => _.Length).Returns(ms.Length);
+            imagen.Setup(_ => _.FileName).Returns(fileName + ".png");
+            imagen.Setup(_ => _.ContentType).Returns("image");
+
+            PublishMedia publishMedia = new PublishMedia();
+            publishMedia.nombre = "pepe";
+            publishMedia.imagen = imagen.Object;
+            publishMedia.video = video.Object;
+
+            using (var dbContexto = DataContextGenerator.Generate())
+            {
+                var repo = new StreamRepository(dbContexto);
+                var cantidadContenido = dbContexto.Medias.Count();
+
+                repo.SaveMedia(publishMedia);
+                dbContexto.Medias.Count().ShouldBe(cantidadContenido+1);
+                dbContexto.Medias.ForEachAsync(media =>
+                {
+                    if (File.Exists(media.Imagen))
+                        File.Delete(media.Imagen);
+                    if (File.Exists(media.Ruta))
+                        File.Delete(media.Ruta);
+                });
             }
         }
     }
