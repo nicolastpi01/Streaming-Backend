@@ -9,9 +9,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Streaming.Infraestructura;
 using Streaming.Infraestructura.Repositories.contracts;
 using Streaming.Infraestructura.Repositories;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 

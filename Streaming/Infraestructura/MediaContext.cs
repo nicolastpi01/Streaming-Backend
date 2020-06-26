@@ -10,6 +10,7 @@ namespace Streaming.Infraestructura
         public const string DEFAULT_SCHEMA = "Streaming";
         public DbSet<MediaEntity> Medias { get; set; }
         public DbSet<TagEntity> Tags { get; set; }
+
         //public DbSet<UserEntity> Users { get; set; }
 
 
@@ -26,9 +27,12 @@ namespace Streaming.Infraestructura
                 entity.Property(_ => _.Nombre).IsRequired();
                 entity.Property(_ => _.Ruta).IsRequired();
                 entity.Property(_ => _.Descripcion);
-                //entity.Property(_ => _.Tags);
                 entity.Property(_ => _.Autor);
                 entity.Property(_ => _.Imagen);
+                entity.Property(_ => _.FechaCreacion);
+                entity.Property(_ => _.MeGusta);
+                entity.Property(_ => _.NoMeGusta);
+                entity.Property(_ => _.Vistas);
             });
 
             modelBuilder.Entity<TagEntity>(entity =>
@@ -36,9 +40,6 @@ namespace Streaming.Infraestructura
                 entity.ToTable("Tag");
                 entity.HasKey(_ => _.Id);
                 entity.Property(_ => _.Nombre).IsRequired();
-                /*entity.HasOne(t => t.Media)
-                    .WithMany(t => t.Tags)
-                    .HasForeignKey(t => t.IdMedia);*/
 
             });
 
@@ -51,6 +52,11 @@ namespace Streaming.Infraestructura
                     .HasForeignKey(t => t.IdMedia);
 
             });
+
+            
+
+            
+            
             
         }
     }

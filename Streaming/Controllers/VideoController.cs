@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Streaming.Controllers.Model;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Streaming.Controllers
 {
@@ -25,7 +26,7 @@ namespace Streaming.Controllers
         public VideoController(IStreamRepository repo)
         {
             Repo = repo;
-            offset = 8;
+            offset = 10;
         }
 
         [HttpGet]
@@ -63,12 +64,15 @@ namespace Streaming.Controllers
         //[Authorize]
         public async Task<PaginadoResponse> GetVideos(int page)
         {
+            if (page > 0) page--;
+            else return null;
+
             var indice = page * offset;
 
             try
             {
                 List<MediaEntity> resultado = await Repo.PaginarMedia(indice, offset);
-                var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor)).ToList() as List<VideosResult>;
+                var resMap = resultado.Select(pair => new VideosResult(pair.Id.ToString(), pair.Nombre, pair.Descripcion, pair.Autor, pair.FechaCreacion, pair.MeGusta, pair.NoMeGusta, pair.Vistas)).ToList() as List<VideosResult>;
                 return new PaginadoResponse(offset, Repo.GetTotalVideos(), resMap);
             }
             catch (Exception e)
@@ -96,6 +100,26 @@ namespace Streaming.Controllers
             return Ok(new { Status = "grabado"});
         }
 
+        [HttpPost]
+        [Route("like")]
+        //[ReadableBodyStream]
+        [AllowAnonymous]
+        public async Task<ActionResult> AddLike(LikeRequest request)
+        {
+            
+                Repo.AddLike(request.mediaId);
+                // body = "param=somevalue&param2=someothervalue"
+            
+            
+            //var media = Repo.getMediaById(mediaId);
+            //media.addMG();
+            //Repo.Update(media);
+
+            return Ok(new { Status = "grabado" });
+        }
+
+        
+
         [HttpGet]
         [Route("sugerencias")]
         public Task<List<string>> GetSugerencias(string sugerencia) // las sugerencias para una posible busqueda
@@ -105,6 +129,21 @@ namespace Streaming.Controllers
         
     }
 
+    public class LikeRequest
+    {
+        public string mediaId { get; set; }
+
+            public LikeRequest()
+        {
+
+        }
+
+        public LikeRequest(string mediaId)
+        {
+            this.mediaId = mediaId;
+        }
+    }
+
     public class VideosResult
     {
         public string indice { get; set; }
@@ -112,7 +151,11 @@ namespace Streaming.Controllers
         public string descripcion { get; set; }
         //public List<TagEntity> tags { get; set; }
         public string autor { get; set; }
-        //public string duracion { get; set; }
+        public DateTime fechaCreacion { get; }
+        public double meGusta { get; }
+        public double noMeGusta { get; }
+        public double vistas { get; }
+
 
         public VideosResult(string indice, string nombre, string descripcion, string autor)
         {
@@ -121,6 +164,18 @@ namespace Streaming.Controllers
             this.descripcion = descripcion;
             //this.tags = tags;
             this.autor = autor;
+        }
+
+        public VideosResult(string indice, string nombre, string descripcion, string autor, DateTime fechaCreacion, double meGusta, double noMeGusta, double vistas) : this(indice, nombre, descripcion, autor)
+        {
+            this.indice = indice;
+            this.nombre = nombre;
+            this.descripcion = descripcion;
+            this.autor = autor;
+            this.fechaCreacion = fechaCreacion; // que retorne el tiempo de forma mas amigable
+            this.meGusta = meGusta;
+            this.noMeGusta = noMeGusta;
+            this.vistas = vistas;
         }
     }
 

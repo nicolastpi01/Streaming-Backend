@@ -21,5 +21,6 @@ namespace Streaming.Infraestructura.Repositories.contracts
         FileStreamResult GetImagenById(string fileId, ControllerBase controller);
         public void SaveMedia(Controllers.Model.PublishMedia mediapublicada);
         Task<string> SaveVideo(IFormFile archivo, string name);
+        void AddLike(string mediaId);
     }
 }

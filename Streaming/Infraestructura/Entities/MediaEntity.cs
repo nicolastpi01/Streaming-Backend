@@ -9,19 +9,19 @@ namespace Streaming.Infraestructura.Entities
 {
     public class MediaEntity : Entity
     {
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        //public int MediaId { get; set; }
         public string Nombre { get; set; }
         public string Ruta { get; set; }
         public string Descripcion { get; set; }
         public string Imagen { get; set; }
-        //public string Tags { get; set; } // Example -> sports, movies, music, others, etc
-
-        //public List<TagEntity> Tags { get; set; }
-
+        
         private readonly List<TagEntity> _tags;
         public IReadOnlyCollection<TagEntity> Tags => _tags;
         public string Autor { get; set; }
+        public DateTime FechaCreacion { get; set; }
+        public double MeGusta { get; set; }
+        public double NoMeGusta { get; set; }
+
+        public double Vistas { get; set; }
 
         public bool CoincideTag(string tag)
         {
@@ -32,9 +32,6 @@ namespace Streaming.Infraestructura.Entities
             return ret;
         }
 
-        // Fecha de subida (cuando se crea el video)
-
-        // duracion (se calcular cuando se crea el video / sube)
 
         protected MediaEntity()
         {
@@ -46,33 +43,35 @@ namespace Streaming.Infraestructura.Entities
                   string Ruta,
                   string Descripcion,
                   string Autor,
-                  string Imagen) : this()
+                  string Imagen,
+                  DateTime FechaCreacion,
+                  double MeGusta,
+                  double NoMeGusta,
+                  double Vistas) : this()
         {
             this.Nombre = Nombre;
             this.Ruta = Ruta;
             this.Descripcion = Descripcion;
             this.Autor = Autor;
             this.Imagen = Imagen;
+            this.FechaCreacion = FechaCreacion;
+            this.MeGusta = MeGusta;
+            this.NoMeGusta = NoMeGusta;
+            this.Vistas = Vistas;
         }
 
-        public MediaEntity(string Nombre,
-                  string Ruta,
-                  string Descripcion,
-                  string Autor
-                  ) : this()
-        {
-            this.Nombre = Nombre;
-            this.Ruta = Ruta;
-            this.Descripcion = Descripcion;
-            this.Autor = Autor;
-           
-        }
+        
 
         public void AddTag(int IdMedia, MediaEntity Media, string Nombre)
         {
             this._tags.Add(new TagEntity(IdMedia,
                                               Media,
                                               Nombre));
+        }
+
+        public void addMG()
+        {
+            this.MeGusta += 1;
         }
 
     }

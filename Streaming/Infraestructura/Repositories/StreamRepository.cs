@@ -105,7 +105,7 @@ namespace Streaming.Infraestructura.Repositories
             Task.WhenAll(procesos).ContinueWith(async (state) =>
             {
                 if (procesos.Any(t => t.IsFaulted)) return;
-                var media = new MediaEntity(mediapublicada.nombre, CrearRuta(mediapublicada.nombre,mediapublicada.video.FileName), "Una descripcion", "NiocolasTsk", CrearRuta(mediapublicada.nombre, mediapublicada.imagen.FileName));
+                var media = new MediaEntity(mediapublicada.nombre, CrearRuta(mediapublicada.nombre,mediapublicada.video.FileName), "Una descripcion", "NiocolasTsk", CrearRuta(mediapublicada.nombre, mediapublicada.imagen.FileName), DateTime.Now, 0, 0, 0);
                 GetMedias().Add(media);
                 _context.SaveChanges();
             }).Wait();
@@ -157,7 +157,15 @@ namespace Streaming.Infraestructura.Repositories
 
         //esto seria en la ubicacion de contenidos del usuario
         // ".mp4" o ".png"
-        private string CrearRuta(string name, string archivo) => "/StreamingMovies/" + name + "." + archivo.Split(".").Last(); 
-        
+        private string CrearRuta(string name, string archivo) => "/StreamingMovies/" + name + "." + archivo.Split(".").Last();
+
+        public void AddLike(string mediaId)
+        {
+            //throw new NotImplementedException();
+            var media = this.getMediaById(mediaId);
+            media.addMG();
+            GetMedias().Update(media);
+            _context.SaveChanges();
+        }
     }    
 }
